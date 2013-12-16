@@ -1,0 +1,18 @@
+
+Transaction usecases
+-Run each command in separate transaction
+-Run multiple commands in one transaction
+-Run multiple in the same but one should commit anyhow (example: audit logging)
+
+Bulk dispather
+
+Rest project like the JMS one if needed
+
+Example implementation:
+Rest interface
+Jms, async and sync dispathing
+Caching
+Transaction handling (with error audit)
+
+
+
