@@ -5,7 +5,7 @@ import java.io.Serializable;
 import org.command4spring.command.Command;
 
 /**
- * A marker interface for {@link Command} results.
+ * Interface for {@link Command} results.
  * 
  */
 public interface Result extends Serializable {

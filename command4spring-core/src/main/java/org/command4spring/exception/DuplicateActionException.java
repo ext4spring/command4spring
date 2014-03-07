@@ -7,8 +7,4 @@ public class DuplicateActionException extends DispatchException {
 		super(message);
 	}
 
-	public DuplicateActionException(final String message, final Exception e) {
-		super(message, e);
-	}
-
 }

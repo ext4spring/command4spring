@@ -34,7 +34,7 @@ public class AbstractCommand<R extends Result> implements Command<R> {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean equals(Object obj) {
-		return (obj!=null && obj instanceof AbstractCommand && ((AbstractCommand)obj).getCommandId().equals(this.commandId));
+		return (obj!=null && obj.getClass().getName().equals(this.getClass().getName()) && ((AbstractCommand)obj).getCommandId().equals(this.commandId));
 	}
 
 	@Override

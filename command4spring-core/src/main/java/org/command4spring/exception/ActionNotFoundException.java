@@ -7,8 +7,4 @@ public class ActionNotFoundException extends DispatchException {
 		super(message);
 	}
 
-	public ActionNotFoundException(final String message, final Exception e) {
-		super(message, e);
-	}
-
 }

@@ -8,7 +8,7 @@ public class SampleAction implements Action<SampleCommand, SampleResult> {
 
 	@Override
 	public SampleResult execute(SampleCommand command) {
-		return new SampleResult();
+		return new SampleResult(command.getCommandId());
 	}
 
 	@Override
