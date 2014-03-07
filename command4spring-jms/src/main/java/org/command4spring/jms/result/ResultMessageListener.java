@@ -15,8 +15,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.command4spring.result.Result;
 
-//TODO: remove old results
-
 public class ResultMessageListener implements MessageListener {
 
     private static final Log LOGGER = LogFactory.getLog(ResultMessageListener.class);
