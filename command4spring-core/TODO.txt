@@ -1,3 +1,15 @@
+FEATURES
+-auto register actions for commands
+-dispatch commands to actions
+-async dispatch
+-jms dispatch
+-schedule commands
+-predefined common results
+-command validation in actions
+
+TODO/IDEAS
+
+Monitoring: Command logging, action execution time, jmx support
 
 Action chaining concept. A result of an action could be the command of the other action. With camel it is possible with converters
 
@@ -7,7 +19,6 @@ Transaction usecases
 -Run multiple in the same but one should commit anyhow (example: audit logging)
 
 Command factory pattern for creating commands from different inputs (like rest parameters or camel message)
-Command validation concept
 
 Scheduled actions with Spring TaskScheduler
 Camel dispatcher components. 

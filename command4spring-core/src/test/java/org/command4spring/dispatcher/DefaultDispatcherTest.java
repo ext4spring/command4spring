@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.command4spring.action.Action;
 import org.command4spring.command.Command;
-import org.command4spring.dispatcher.DefaultDispatcher;
 import org.command4spring.example.SampleAction;
 import org.command4spring.example.SampleCommand;
 import org.command4spring.example.SampleResult;
 import org.command4spring.exception.ActionNotFoundException;
+import org.command4spring.exception.CommandValidationException;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.exception.DuplicateActionException;
 import org.command4spring.result.Result;
@@ -47,4 +47,13 @@ public class DefaultDispatcherTest {
         dispatcher.setActions(actions);
     }
 
+    @Test(expected = CommandValidationException.class)
+    public void dispatcherValidateCommandsBeforeExecution() throws DispatchException {
+        DefaultDispatcher dispatcher = new DefaultDispatcher();
+        List<Action<? extends Command<? extends Result>, ? extends Result>> actions = new ArrayList<Action<? extends Command<? extends Result>, ? extends Result>>();
+        actions.add(new SampleAction());
+        dispatcher.setActions(actions);
+        SampleCommand invalidCommand=new SampleCommand("123456");
+        dispatcher.dispatch(invalidCommand);
+    }
 }

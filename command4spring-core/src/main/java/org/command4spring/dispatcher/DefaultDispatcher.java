@@ -36,14 +36,14 @@ public class DefaultDispatcher implements Dispatcher {
 	public <C extends Command<R>, R extends Result> R dispatch(C command) throws DispatchException {
 		LOGGER.debug("Execting command:" + command);
 		long start = System.currentTimeMillis();
-		R result = this.findHandler(command).execute(command);
+		R result = this.findAction(command).validate(command).execute(command);
 		result.setCommandId(command.getCommandId());
 		LOGGER.debug("Finished command:" + command + " (" + (System.currentTimeMillis() - start) + "msec)");
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <C extends Command<R>, R extends Result> Action<C, R> findHandler(C command) throws ActionNotFoundException {
+	protected <C extends Command<R>, R extends Result> Action<C, R> findAction(C command) throws ActionNotFoundException {
 		if (this.actionsMap.containsKey(command.getClass())) {
 			return (Action<C, R>) this.actionsMap.get(command.getClass());
 		}
