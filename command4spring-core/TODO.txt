@@ -1,10 +1,26 @@
 
+Action chaining concept. A result of an action could be the command of the other action. With camel it is possible with converters
+
 Transaction usecases
 -Run each command in separate transaction
 -Run multiple commands in one transaction
 -Run multiple in the same but one should commit anyhow (example: audit logging)
 
-Bulk dispather
+Command factory pattern for creating commands from different inputs (like rest parameters or camel message)
+Command validation concept
+
+Scheduled actions with Spring TaskScheduler
+Camel dispatcher components. 
+	Command in the message body
+	Result could go to body or to header or just drop
+	Converter to make command from other types
+
+Security
+	Run as 
+	Run as async (support for current user and other user too)
+	RolesAllowed
+
+Bulk dispatcher
 
 Rest project like the JMS one if needed
 
