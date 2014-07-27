@@ -9,7 +9,30 @@ FEATURES
 
 TODO/IDEAS
 
-Monitoring: Command logging, action execution time, jmx support
+Command serialization to XML, JSON solution. Where the class type coming from on deserialization?
+
+Modular dispatcher.
+-Works like a filter. A module can implement CommandProcessor and/or ResponseProcessor. Filter order is based on spring config
+-Executor is the default CommandProcessor
+-Other possible Processors:
+	-Logging
+	-Monitoring
+	-Load balancing
+	-Caching
+-Support for multiple executors. When no action found exception.
+
+Jms dispatcher update 
+-Implement as processor
+-configurable message format
+
+Async dispatcher update
+-Implement as processor (all execute should return a future?)
+
+CacheCommandProcessor
+
+
+MonitorProcessor: Command/Result logging, action execution time, jmx support
+
 
 Action chaining concept. A result of an action could be the command of the other action. With camel it is possible with converters
 
@@ -21,6 +44,7 @@ Transaction usecases
 Command factory pattern for creating commands from different inputs (like rest parameters or camel message)
 
 Scheduled actions with Spring TaskScheduler
+
 Camel dispatcher components. 
 	Command in the message body
 	Result could go to body or to header or just drop
