@@ -30,7 +30,7 @@ public class DispatcherMessageListener extends AbstractDispatcherService impleme
 			try {
 				@SuppressWarnings("unchecked")
 				Command<? extends Result> command = (Command<? extends Result>) objectMessage.getObject();
-				Result result = this.getDispatcher().dispatch(command);
+				Result result = this.getDispatcher().dispatch(command).get();
 				this.sendResult(result);
 			} catch (Exception e) {
 				throw new ListenerExecutionFailedException("Error while dispatching command:" + e, e);

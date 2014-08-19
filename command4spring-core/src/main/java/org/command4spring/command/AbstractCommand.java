@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.command4spring.result.Result;
 
-public class AbstractCommand<R extends Result> implements Command<R> {
+public abstract class AbstractCommand<R extends Result> implements Command<R> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,6 +26,11 @@ public class AbstractCommand<R extends Result> implements Command<R> {
 		return this.commandId;
 	}
 
+	@Override
+	public Class<?> getCommandType() {
+	    return this.getClass();
+	}
+	
 	@Override
 	public int hashCode() {
 		return this.getClass().getName().hashCode();

@@ -10,7 +10,9 @@ public class VoidResult extends AbstractResult implements Result {
 
 	private static final long serialVersionUID = -4832943487870620012L;
 
-	public VoidResult() {
+	public VoidResult(String commandId) {
+	    super(commandId);
 	}
+	
 
 }

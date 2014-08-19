@@ -13,12 +13,14 @@ import org.command4spring.service.DispatcherService;
  *            The {@link Result} type.
  */
 public interface Command<R extends Result> extends Serializable {
-
+    
 	@Override
 	boolean equals(Object o);
 
 	@Override
 	int hashCode();
 
-	String getCommandId();
+        Class<?> getCommandType();
+
+        String getCommandId();
 }

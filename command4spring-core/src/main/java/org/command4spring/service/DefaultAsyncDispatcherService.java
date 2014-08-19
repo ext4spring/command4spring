@@ -6,7 +6,6 @@ import org.command4spring.command.Command;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.result.Result;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +20,6 @@ public class DefaultAsyncDispatcherService extends AbstractDispatcherService imp
 	@Async
 	@Transactional(propagation = Propagation.SUPPORTS)
 	public <C extends Command<R>, R extends Result> Future<R> dispatch(C command) throws DispatchException {
-		return new AsyncResult<R>(this.getDispatcher().dispatch(command));
+		return this.getDispatcher().dispatch(command);
 	}
 }

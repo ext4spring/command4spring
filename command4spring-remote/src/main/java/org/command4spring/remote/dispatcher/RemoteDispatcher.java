@@ -1,4 +1,4 @@
-package org.command4spring.dispatcher;
+package org.command4spring.remote.dispatcher;
 
 import java.util.concurrent.Future;
 
@@ -10,11 +10,10 @@ import org.command4spring.result.Result;
  * Executes actions and returns the results.
  * 
  */
-public interface Dispatcher {
+public interface RemoteDispatcher {
 
 	/**
-	 * Finds the action for the specified command and executes it. Returns the
-	 * appropriate result.
+	 * Sends the command through the wire and receives the result
 	 * 
 	 * @return The action's result.
 	 * @throws DispatchException

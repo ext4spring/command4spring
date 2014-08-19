@@ -2,6 +2,7 @@ package org.command4spring.dispatcher;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.command4spring.action.Action;
 import org.command4spring.command.Command;
@@ -19,13 +20,13 @@ import org.junit.Test;
 public class DefaultDispatcherTest {
 
     @Test
-    public void testDispatcherChooseTheRightAction() throws DispatchException {
+    public void testDispatcherChooseTheRightAction() throws DispatchException, InterruptedException, ExecutionException {
         DefaultDispatcher dispatcher = new DefaultDispatcher();
         List<Action<? extends Command<? extends Result>, ? extends Result>> actions = new ArrayList<Action<? extends Command<? extends Result>, ? extends Result>>();
         actions.add(new SampleAction());
         dispatcher.setActions(actions);
         SampleCommand command = new SampleCommand();
-        SampleResult sampleResult = dispatcher.dispatch(command);
+        SampleResult sampleResult = dispatcher.dispatch(command).get();
         Assert.assertNotNull(sampleResult);
         Assert.assertEquals(command.getCommandId(), sampleResult.getCommandId());
     }

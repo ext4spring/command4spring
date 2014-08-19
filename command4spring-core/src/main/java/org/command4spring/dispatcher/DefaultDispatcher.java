@@ -3,6 +3,7 @@ package org.command4spring.dispatcher;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,6 +14,7 @@ import org.command4spring.exception.DispatchException;
 import org.command4spring.exception.DuplicateActionException;
 import org.command4spring.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,13 +35,13 @@ public class DefaultDispatcher implements Dispatcher {
 
 	@Override
 	@Transactional
-	public <C extends Command<R>, R extends Result> R dispatch(C command) throws DispatchException {
+	public <C extends Command<R>, R extends Result> Future<R> dispatch(C command) throws DispatchException {
 		LOGGER.debug("Execting command:" + command);
 		long start = System.currentTimeMillis();
 		R result = this.findAction(command).validate(command).execute(command);
 		result.setCommandId(command.getCommandId());
 		LOGGER.debug("Finished command:" + command + " (" + (System.currentTimeMillis() - start) + "msec)");
-		return result;
+		return new AsyncResult<R>(result);
 	}
 
 	@SuppressWarnings("unchecked")

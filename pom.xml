@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.ext4spring</groupId>
@@ -38,6 +37,12 @@
 	<modules>
 		<module>command4spring-core</module>
 		<module>command4spring-jms</module>
+		<module>command4spring-xml</module>
+		<module>command4spring-remote</module>
+		<module>command4spring-remote-http</module>
+		<module>command4spring-sample-common</module>
+		<module>command4spring-sample-service</module>
+		<module>command4spring-sample-web</module>
 	</modules>
 
 	<dependencyManagement>
@@ -45,6 +50,51 @@
 			<dependency>
 				<groupId>org.ext4spring</groupId>
 				<artifactId>command4spring-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ext4spring</groupId>
+				<artifactId>command4spring-remote</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ext4spring</groupId>
+				<artifactId>command4spring-xml</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ext4spring</groupId>
+				<artifactId>command4spring-jms</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ext4spring</groupId>
+				<artifactId>command4spring-remote-http</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ext4spring</groupId>
+				<artifactId>command4spring-remote-http</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ext4spring</groupId>
+				<artifactId>command4spring-remote-http</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ext4spring</groupId>
+				<artifactId>command4spring-sample-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ext4spring</groupId>
+				<artifactId>command4spring-sample-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ext4spring</groupId>
+				<artifactId>command4spring-sample-web</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -83,6 +133,16 @@
 				<groupId>commons-logging</groupId>
 				<artifactId>commons-logging</artifactId>
 				<version>1.1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>1.3.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.3.5</version>
 			</dependency>
 
 			<!-- For Spring framework -->
