@@ -6,7 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.command4spring.result.Result;
 import org.command4spring.service.DispatcherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import org.springframework.scheduling.TaskScheduler;
  */
 public class DefaultCommandScheduler implements CommandScheduler {
 
-    private static final Logger LOG = Logger.getLogger(DefaultCommandScheduler.class);
+    private static final Log LOG = LogFactory.getLog(DefaultCommandScheduler.class);
 
     private DispatcherService dispatcherService;
     private List<ScheduledCommand> scheduledCommands;

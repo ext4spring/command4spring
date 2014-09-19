@@ -1,9 +1,9 @@
 package org.command4spring.sample.common.command;
 
 import org.command4spring.command.AbstractCommand;
-import org.command4spring.result.VoidResult;
+import org.command4spring.result.StringResult;
 
-public class PingCommand extends AbstractCommand<VoidResult>{
+public class GetTimeCommand extends AbstractCommand<StringResult>{
 
     /**
      * 

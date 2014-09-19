@@ -1,0 +1,20 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+	<display-name>Archetype Created Web Application</display-name>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<servlet>
+		<servlet-name>CommandReceiverServlet</servlet-name>
+		<display-name>CommandReceiverServlet</display-name>
+		<description></description>
+		<servlet-class>org.command4spring.remote.http.receiver.CommandReceiverServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CommandReceiverServlet</servlet-name>
+		<url-pattern>/execute</url-pattern>
+	</servlet-mapping>
+</web-app>

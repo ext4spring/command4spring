@@ -1,6 +1,5 @@
 package org.command4spring.result;
 
-import java.io.Serializable;
 
 /**
  * A common use-case is returning a single value from an action. This provides a simple, type-safe superclass for such
@@ -11,14 +10,9 @@ import java.io.Serializable;
  * 
  * @param <T> The value type.
  */
-public abstract class AbstractSimpleResult<T> extends AbstractResult implements Result, Serializable {
+public abstract class AbstractSimpleResult<T> extends AbstractResult implements Result {
 
-    private static final long serialVersionUID = 1163522627213690452L;
     private T value;    
-    
-    protected AbstractSimpleResult() {
-        // for serialization
-    }
     
     protected AbstractSimpleResult(String commandId) {
         super(commandId);

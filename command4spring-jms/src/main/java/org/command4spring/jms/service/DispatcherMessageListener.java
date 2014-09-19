@@ -48,6 +48,7 @@ public class DispatcherMessageListener extends AbstractDispatcherService impleme
 			this.resultJmsTemplate.send(new MessageCreator() {
 	            @Override
 	            public Message createMessage(Session session) throws JMSException {
+	                //TODO: refactor as remote dispatcher and send as text message with serializer
 	                ObjectMessage msg = session.createObjectMessage(result);
 	                msg.setJMSTimestamp(System.currentTimeMillis());
 	                msg.setJMSCorrelationID(result.getCommandId());

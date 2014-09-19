@@ -36,13 +36,13 @@
 
 	<modules>
 		<module>command4spring-core</module>
-		<module>command4spring-jms</module>
+<!-- 		<module>command4spring-jms</module> -->
 		<module>command4spring-xml</module>
 		<module>command4spring-remote</module>
 		<module>command4spring-remote-http</module>
 		<module>command4spring-sample-common</module>
-		<module>command4spring-sample-service</module>
 		<module>command4spring-sample-web</module>
+		<module>command4spring-sample-service</module>
 	</modules>
 
 	<dependencyManagement>
@@ -62,16 +62,11 @@
 				<artifactId>command4spring-xml</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>org.ext4spring</groupId>
-				<artifactId>command4spring-jms</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.ext4spring</groupId>
-				<artifactId>command4spring-remote-http</artifactId>
-				<version>${project.version}</version>
-			</dependency>
+<!-- 			<dependency> -->
+<!-- 				<groupId>org.ext4spring</groupId> -->
+<!-- 				<artifactId>command4spring-jms</artifactId> -->
+<!-- 				<version>${project.version}</version> -->
+<!-- 			</dependency> -->
 			<dependency>
 				<groupId>org.ext4spring</groupId>
 				<artifactId>command4spring-remote-http</artifactId>
@@ -85,16 +80,6 @@
 			<dependency>
 				<groupId>org.ext4spring</groupId>
 				<artifactId>command4spring-sample-common</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.ext4spring</groupId>
-				<artifactId>command4spring-sample-service</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.ext4spring</groupId>
-				<artifactId>command4spring-sample-web</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -127,6 +112,16 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-tx</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 			<dependency>
@@ -202,7 +197,7 @@
 				<version>3.0</version>
 				<configuration>
 					<compilerArguments>
-						<Xlint />
+						<Xlint/>
 					</compilerArguments>
 					<verbose>true</verbose>
 					<source>${java.version}</source>
@@ -314,7 +309,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<execute />
+										<execute/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -328,7 +323,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<execute />
+										<execute/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
