@@ -21,7 +21,7 @@ public class DefaultDispatcherTest {
 
     @Test
     public void testDispatcherChooseTheRightAction() throws DispatchException, InterruptedException, ExecutionException {
-        DefaultDispatcher dispatcher = new DefaultDispatcher();
+        InVmDispatcher dispatcher = new InVmDispatcher();
         List<Action<? extends Command<? extends Result>, ? extends Result>> actions = new ArrayList<Action<? extends Command<? extends Result>, ? extends Result>>();
         actions.add(new SampleAction());
         dispatcher.setActions(actions);
@@ -33,7 +33,7 @@ public class DefaultDispatcherTest {
 
     @Test(expected = ActionNotFoundException.class)
     public void testDispatcherThrowsExceptionIfNoActionFound() throws DispatchException {
-        DefaultDispatcher dispatcher = new DefaultDispatcher();
+        InVmDispatcher dispatcher = new InVmDispatcher();
         List<Action<? extends Command<? extends Result>, ? extends Result>> actions = new ArrayList<Action<? extends Command<? extends Result>, ? extends Result>>();
         dispatcher.setActions(actions);
         dispatcher.dispatch(new SampleCommand());
@@ -41,7 +41,7 @@ public class DefaultDispatcherTest {
 
     @Test(expected = DuplicateActionException.class)
     public void testDispatcherThrowsExceptionIfThereIsMoreActionForACommand() throws DuplicateActionException {
-        DefaultDispatcher dispatcher = new DefaultDispatcher();
+        InVmDispatcher dispatcher = new InVmDispatcher();
         List<Action<? extends Command<? extends Result>, ? extends Result>> actions = new ArrayList<Action<? extends Command<? extends Result>, ? extends Result>>();
         actions.add(new SampleAction());
         actions.add(new SampleAction());
@@ -50,7 +50,7 @@ public class DefaultDispatcherTest {
 
     @Test(expected = CommandValidationException.class)
     public void dispatcherValidateCommandsBeforeExecution() throws DispatchException {
-        DefaultDispatcher dispatcher = new DefaultDispatcher();
+        InVmDispatcher dispatcher = new InVmDispatcher();
         List<Action<? extends Command<? extends Result>, ? extends Result>> actions = new ArrayList<Action<? extends Command<? extends Result>, ? extends Result>>();
         actions.add(new SampleAction());
         dispatcher.setActions(actions);

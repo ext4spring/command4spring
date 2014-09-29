@@ -5,13 +5,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.command4spring.dispatcher.DefaultDispatcher;
+import org.command4spring.dispatcher.InVmDispatcher;
 import org.springframework.stereotype.Component;
 
 /**
  * Marks an action class as a {@link Action} component. Marked DispatchAction
  * components are automatically detected by springs component scan and are
- * injected into the {@link DefaultDispatcher}
+ * injected into the {@link InVmDispatcher}
  * 
  * @author borbasp
  * 

@@ -1,13 +1,13 @@
 package org.command4spring.schedule;
 
-import org.command4spring.service.DispatcherService;
+import org.command4spring.dispatcher.Dispatcher;
 import org.mockito.Mockito;
 
 public class DefaultCommandSchedulerTest {
 
     public void testAllScheduledBasedOnScheduledCommads() {
         DefaultCommandScheduler commandScheduler = new DefaultCommandScheduler();
-        commandScheduler.setDispatcherService(Mockito.mock(DispatcherService.class));
+        commandScheduler.setDispatcher(Mockito.mock(Dispatcher.class));
         ScheduledCommand scheduledCommand = Mockito.mock(ScheduledCommand.class);
         //TODO write test
     }

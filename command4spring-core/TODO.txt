@@ -6,10 +6,11 @@ FEATURES
 -schedule commands
 -predefined common results
 -command validation in actions
+-Command serialization to XML (extendable)
 
 TODO/IDEAS
 
-Command serialization to XML, JSON solution. Where the class type coming from on deserialization?
+Remove Spring dependency and only add it as new module(s)
 
 Modular dispatcher.
 -Works like a filter. A module can implement CommandProcessor and/or ResponseProcessor. Filter order is based on spring config

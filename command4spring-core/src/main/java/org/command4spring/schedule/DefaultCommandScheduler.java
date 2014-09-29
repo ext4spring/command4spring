@@ -8,8 +8,8 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.result.Result;
-import org.command4spring.service.DispatcherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.scheduling.TaskScheduler;
@@ -25,25 +25,25 @@ public class DefaultCommandScheduler implements CommandScheduler {
 
     private static final Log LOG = LogFactory.getLog(DefaultCommandScheduler.class);
 
-    private DispatcherService dispatcherService;
+    private Dispatcher dispatcher;
     private List<ScheduledCommand> scheduledCommands;
     private TaskScheduler taskScheduler;
     private boolean autostart;
 
     private class ScheduledTask implements Runnable {
 
-        private DispatcherService dispatcherService;
-        private ScheduledCommand<?, Result> scheduledCommand;
+        private final Dispatcher dispatcher;
+        private final ScheduledCommand<?, Result> scheduledCommand;
 
-        protected ScheduledTask(DispatcherService dispatcherService, ScheduledCommand<?, Result> scheduledCommand) {
-            this.dispatcherService = dispatcherService;
+        protected ScheduledTask(final Dispatcher dispatcher, final ScheduledCommand<?, Result> scheduledCommand) {
+            this.dispatcher=dispatcher;
             this.scheduledCommand = scheduledCommand;
         }
 
         @Override
         public void run() {
             try {
-                Result result = this.dispatcherService.dispatch(this.scheduledCommand.createCommand());
+                Result result = this.dispatcher.dispatch(this.scheduledCommand.createCommand()).getResult();
                 this.scheduledCommand.handleResult(result);
             } catch (Throwable e) {
                 this.scheduledCommand.handleException(e);
@@ -55,7 +55,7 @@ public class DefaultCommandScheduler implements CommandScheduler {
     @SuppressWarnings("rawtypes")
     public void schedule() {
         for (ScheduledCommand scheduledCommand : this.scheduledCommands) {
-            ScheduledTask task = new ScheduledTask(this.dispatcherService, scheduledCommand);
+            ScheduledTask task = new ScheduledTask(this.dispatcher, scheduledCommand);
             this.taskScheduler.schedule(task, scheduledCommand.createTrigger());
             ScheduledFuture future = this.taskScheduler.schedule(task, scheduledCommand.createTrigger());
             LOG.info("Scheduled: " + scheduledCommand.getClass().getName() + ". First run in: " + future.getDelay(TimeUnit.SECONDS) + " seconds");
@@ -69,22 +69,22 @@ public class DefaultCommandScheduler implements CommandScheduler {
         }
     }
 
-    public void setAutostart(boolean autostart) {
+    public void setAutostart(final boolean autostart) {
         this.autostart = autostart;
     }
 
     @Required
-    public void setDispatcherService(DispatcherService dispatcherService) {
-        this.dispatcherService = dispatcherService;
+    public void setDispatcher(final Dispatcher dispatcher) {
+        this.dispatcher = dispatcher;
     }
 
     @Required
-    public void setTaskScheduler(TaskScheduler taskScheduler) {
+    public void setTaskScheduler(final TaskScheduler taskScheduler) {
         this.taskScheduler = taskScheduler;
     }
 
     @Autowired
-    public void setScheduledCommands(List<ScheduledCommand> scheduledCommands) {
+    public void setScheduledCommands(final List<ScheduledCommand> scheduledCommands) {
         this.scheduledCommands = scheduledCommands;
     }
 
