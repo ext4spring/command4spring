@@ -1,24 +1,43 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.ext4spring</groupId>
-    <artifactId>command4spring</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-  </parent>
-  <artifactId>command4spring-sample-web</artifactId>
-  <packaging>war</packaging>
-  <name>command4spring-sample-web Maven Webapp</name>
-  <url>http://maven.apache.org</url>
-  <dependencies>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.ext4spring</groupId>
+		<artifactId>command4spring</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>command4spring-sample-web</artifactId>
+	<packaging>war</packaging>
+	<name>command4spring-sample-web Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<dependencies>
 		<dependency>
 			<groupId>org.ext4spring</groupId>
 			<artifactId>command4spring-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.ext4spring</groupId>
+			<artifactId>command4spring-remote-http</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ext4spring</groupId>
+			<artifactId>command4spring-xml</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ext4spring</groupId>
 			<artifactId>command4spring-sample-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
@@ -26,8 +45,18 @@
 			<version>7.0.54</version>
 			<scope>provided</scope>
 		</dependency>
-  </dependencies>
-  <build>
-    <finalName>command4spring-sample-web</finalName>
-  </build>
+	</dependencies>
+	<build>
+		<finalName>command4spring-sample-web</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.2.3.v20140905</version>
+				<!-- <configuration> -->
+				<!-- <jettyXml>jetty.xml</jettyXml> -->
+				<!-- </configuration> -->
+			</plugin>
+		</plugins>
+	</build>
 </project>

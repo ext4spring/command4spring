@@ -18,6 +18,7 @@ public class XmlSerializerTest {
         String textCommand = serializer.toText(sampleCommand);
         Command<?> command = serializer.toCommand(textCommand);
         Assert.assertEquals(sampleCommand.getClass(), command.getClass());
+        Assert.assertTrue(command instanceof SampleCommand);
     }
 
     @Test

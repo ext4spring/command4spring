@@ -6,7 +6,7 @@
 	<context:component-scan base-package="org.command4spring.sample.service"></context:component-scan>
 	
 	<bean id="serializer" class="org.command4spring.xml.serializer.XmlSerializer" />
-	<bean id="dispatcher" class="org.command4spring.dispatcher.DefaultDispatcher"></bean>
+	<bean id="dispatcher" class="org.command4spring.dispatcher.InVmDispatcher"></bean>
 	<bean class="org.command4spring.remote.receiver.DefaultCommandReceiver">
 		<constructor-arg ref="serializer" />
 		<constructor-arg ref="dispatcher" />

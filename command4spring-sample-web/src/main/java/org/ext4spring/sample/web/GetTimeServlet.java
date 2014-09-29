@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.command4spring.dispatcher.Dispatcher;
+import org.command4spring.remote.http.dispatcher.HttpDispatcher;
 import org.command4spring.result.ResultFuture;
 import org.command4spring.result.StringResult;
 import org.command4spring.sample.common.command.GetTimeCommand;
+import org.command4spring.xml.serializer.XmlSerializer;
 
 /**
  * Servlet implementation class GetTimeServlet
@@ -18,13 +20,13 @@ import org.command4spring.sample.common.command.GetTimeCommand;
 public class GetTimeServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    private Dispatcher sampleDispatcher;
+    private final Dispatcher sampleDispatcher;
 
     /**
      * Default constructor. 
      */
     public GetTimeServlet() {
-        // TODO Auto-generated constructor stub
+        this.sampleDispatcher=new HttpDispatcher(new XmlSerializer(), "http://localhost:8080/execute");
     }
 
     /**

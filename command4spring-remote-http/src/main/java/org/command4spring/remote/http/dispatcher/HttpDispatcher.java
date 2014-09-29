@@ -28,10 +28,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class HttpDispatcher implements RemoteDispatcher {
 
-    private CloseableHttpClient httpclient = HttpClients.createDefault();
+    private final CloseableHttpClient httpclient;
     private final Serializer serializer;
     private final String targetUrl;
 
+    public HttpDispatcher(final Serializer serializer, final String targetUrl) {
+        this(HttpClients.createDefault(), serializer, targetUrl);
+    }
     public HttpDispatcher(final CloseableHttpClient httpclient, final Serializer serializer, final String targetUrl) {
         super();
         this.httpclient = httpclient;

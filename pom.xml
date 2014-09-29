@@ -36,7 +36,7 @@
 
 	<modules>
 		<module>command4spring-core</module>
-<!-- 		<module>command4spring-jms</module> -->
+		<!-- <module>command4spring-jms</module> -->
 		<module>command4spring-xml</module>
 		<module>command4spring-remote</module>
 		<module>command4spring-remote-http</module>
@@ -62,11 +62,11 @@
 				<artifactId>command4spring-xml</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-<!-- 			<dependency> -->
-<!-- 				<groupId>org.ext4spring</groupId> -->
-<!-- 				<artifactId>command4spring-jms</artifactId> -->
-<!-- 				<version>${project.version}</version> -->
-<!-- 			</dependency> -->
+			<!-- <dependency> -->
+			<!-- <groupId>org.ext4spring</groupId> -->
+			<!-- <artifactId>command4spring-jms</artifactId> -->
+			<!-- <version>${project.version}</version> -->
+			<!-- </dependency> -->
 			<dependency>
 				<groupId>org.ext4spring</groupId>
 				<artifactId>command4spring-remote-http</artifactId>
@@ -197,7 +197,7 @@
 				<version>3.0</version>
 				<configuration>
 					<compilerArguments>
-						<Xlint/>
+						<Xlint />
 					</compilerArguments>
 					<verbose>true</verbose>
 					<source>${java.version}</source>
@@ -309,7 +309,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<execute/>
+										<execute />
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -323,7 +323,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<execute/>
+										<execute />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>

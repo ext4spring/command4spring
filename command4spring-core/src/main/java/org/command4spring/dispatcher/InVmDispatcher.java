@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class InVmDispatcher implements Dispatcher {
 
     private static final Log LOGGER = LogFactory.getLog(InVmDispatcher.class);
-    private Map<Class<?>, Action<? extends Command<? extends Result>, ? extends Result>> actionsMap;
+    private Map<Class<?>, Action<? extends Command<? extends Result>, ? extends Result>> actionsMap=new HashMap<Class<?>, Action<? extends Command<? extends Result>,? extends Result>>();
 
     @Override
     @Transactional
