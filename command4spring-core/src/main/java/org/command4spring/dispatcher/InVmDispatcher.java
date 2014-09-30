@@ -12,34 +12,19 @@ import org.command4spring.exception.ActionNotFoundException;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.exception.DuplicateActionException;
 import org.command4spring.result.Result;
-import org.command4spring.result.ResultFuture;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Default implementation of the {@link Dispatcher}
- * 
- * <p>
- * Provides basic action lookup and execution support.
- * </p>
- * 
- * 
+ * InVm implementation of the {@link Dispatcher}
  */
-public class InVmDispatcher implements Dispatcher {
+public class InVmDispatcher extends AbstractDispatcher implements Dispatcher {
 
     private static final Log LOGGER = LogFactory.getLog(InVmDispatcher.class);
-    private Map<Class<?>, Action<? extends Command<? extends Result>, ? extends Result>> actionsMap=new HashMap<Class<?>, Action<? extends Command<? extends Result>,? extends Result>>();
+    private Map<Class<?>, Action<? extends Command<? extends Result>, ? extends Result>> actionsMap = new HashMap<Class<?>, Action<? extends Command<? extends Result>, ? extends Result>>();
 
     @Override
-    @Transactional
-    public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(final C command) throws DispatchException {
-        LOGGER.debug("Execting command:" + command);
-        long start = System.currentTimeMillis();
-        R result = this.findAction(command).validate(command).execute(command);
-        result.setCommandId(command.getCommandId());
-        LOGGER.debug("Finished command:" + command + " (" + (System.currentTimeMillis() - start) + "msec)");
-        return new ResultFuture<R>(new AsyncResult<R>(result));
+    public <C extends Command<R>, R extends Result> R execute(final C command) throws DispatchException {
+        return this.findAction(command).validate(command).execute(command);
     }
 
     @SuppressWarnings("unchecked")

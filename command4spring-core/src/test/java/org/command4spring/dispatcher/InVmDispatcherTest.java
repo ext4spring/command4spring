@@ -17,7 +17,7 @@ import org.command4spring.result.Result;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class DefaultDispatcherTest {
+public class InVmDispatcherTest {
 
     @Test
     public void testDispatcherChooseTheRightAction() throws DispatchException, InterruptedException, ExecutionException {
@@ -26,7 +26,7 @@ public class DefaultDispatcherTest {
         actions.add(new SampleAction());
         dispatcher.setActions(actions);
         SampleCommand command = new SampleCommand();
-        SampleResult sampleResult = dispatcher.dispatch(command).get();
+        SampleResult sampleResult = dispatcher.dispatch(command).getResult();
         Assert.assertNotNull(sampleResult);
         Assert.assertEquals(command.getCommandId(), sampleResult.getCommandId());
     }

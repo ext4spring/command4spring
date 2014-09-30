@@ -12,21 +12,20 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.command4spring.command.Command;
+import org.command4spring.dispatcher.AbstractDispatcher;
 import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.remote.dispatcher.RemoteDispatcher;
 import org.command4spring.remote.exception.RemoteDispatchException;
 import org.command4spring.result.Result;
-import org.command4spring.result.ResultFuture;
 import org.command4spring.serializer.Serializer;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 /**
- * Synchronous (in VM) implementation of the {@link Dispatcher}
+ * Remote HTTP implementation of the {@link Dispatcher}
  */
 @Service
-public class HttpDispatcher implements RemoteDispatcher {
+public class HttpDispatcher extends AbstractDispatcher implements RemoteDispatcher {
 
     private final CloseableHttpClient httpclient;
     private final Serializer serializer;
@@ -44,7 +43,7 @@ public class HttpDispatcher implements RemoteDispatcher {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(final C command) throws DispatchException {
+    protected <C extends Command<R>, R extends Result> R execute(final C command) throws DispatchException {
         try {
             HttpPost httpPost = new HttpPost(this.targetUrl);
             String body = this.serializer.toText(command);
@@ -59,7 +58,7 @@ public class HttpDispatcher implements RemoteDispatcher {
                 responseBody = "";
             }
             if (status == HttpStatus.SC_OK) {
-                return new ResultFuture<R>(new AsyncResult<R>((R) this.serializer.toResult(responseBody)));
+                return (R) this.serializer.toResult(responseBody);
             } else {
                 throw new RemoteDispatchException("Error response received from URL:" + this.targetUrl + ". HTTP status:" + status + " Message:" + responseBody);
             }
@@ -69,5 +68,4 @@ public class HttpDispatcher implements RemoteDispatcher {
             throw new RemoteDispatchException("Error while sending command through HTTP to URL:" + this.targetUrl + ". Error message:" + e, e);
         }
     }
-
 }
