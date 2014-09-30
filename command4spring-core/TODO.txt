@@ -1,8 +1,7 @@
 FEATURES
 -auto register actions for commands
 -dispatch commands to actions
--async dispatch
--jms dispatch
+-filter commands and results
 -schedule commands
 -predefined common results
 -command validation in actions
@@ -10,32 +9,30 @@ FEATURES
 
 TODO/IDEAS
 
+V1.0
+
 Remove Spring dependency and only add it as new module(s)
+-InVmDispatcher
+	-Configurable executor. Prepare also to ForkJoinPool
+-SpringInVmDispatcher (autowired, transactional, async)
 
-Modular dispatcher.
--Works like a filter. A module can implement CommandProcessor and/or ResponseProcessor. Filter order is based on spring config
--Executor is the default CommandProcessor
--Other possible Processors:
+Dispatcher implementations:
+-Jms dispatcher
+	-Implement as remote dispatcher and receiver
+	-configurable message format
+-SpringJmsDispatcher (jmstemplate)
+-Load balancer dispatcher (uses an LB strategy to delegate to dispatcher instances)
+
+Filters
+	-Caching (how to use http cache header? or jms attributes. maybe result should have a header attribute which could travel in a protocol specific place)
+	-Retry with retry policy
+	-Circuit breaker
 	-Logging
-	-Monitoring
-	-Load balancing
-	-Caching
--Support for multiple executors. When no action found exception.
+	-Monitoring (Command/Result logging, action execution time, jmx support)
 
-Jms dispatcher update 
--Implement as processor
--configurable message format
+V1.1
 
-Async dispatcher update
--Implement as processor (all execute should return a future?)
-
-CacheCommandProcessor
-
-
-MonitorProcessor: Command/Result logging, action execution time, jmx support
-
-
-Action chaining concept. A result of an action could be the command of the other action. With camel it is possible with converters
+Action chaining concept. Should we allow this? A result of an action could be a CommandResult which contains the new command or we could use converters like in Camel.
 
 Transaction usecases
 -Run each command in separate transaction
@@ -44,12 +41,13 @@ Transaction usecases
 
 Command factory pattern for creating commands from different inputs (like rest parameters or camel message)
 
-Scheduled actions with Spring TaskScheduler
+Akka integration
 
-Camel dispatcher components. 
-	Command in the message body
-	Result could go to body or to header or just drop
-	Converter to make command from other types
+Camel integration
+	-Camel dispatcher components. 
+	-Command in the message body
+	-Result could go to body or to header or just drop
+	-Converter to make command from other types
 
 Security
 	Run as 
