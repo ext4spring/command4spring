@@ -78,6 +78,7 @@ public class AbstractDispatcherTest {
     }
 
     private class TestDispatcher extends AbstractDispatcher {
+
         @Override
         protected <C extends Command<R>, R extends Result> R execute(final C command) throws DispatchException {
             TestResult result=new TestResult();

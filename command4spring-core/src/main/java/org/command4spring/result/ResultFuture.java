@@ -8,6 +8,7 @@ import java.util.concurrent.TimeoutException;
 import org.command4spring.exception.AsyncErrorException;
 import org.command4spring.exception.AsyncInterruptedException;
 import org.command4spring.exception.AsyncTimeoutException;
+import org.command4spring.exception.DispatchException;
 /**
  * Wrapper for Java {@link Future} to force get timeouts and convert Exceptions for more convenient usage
  * @author pborbas
@@ -61,24 +62,30 @@ public class ResultFuture<T extends Result> implements Future<T> {
         return this.wrappedFuture.get(timeout, unit);
     }
 
-    public T getResult() throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException {
+    public T getResult() throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
         try {
             return this.wrappedFuture.get(MAX_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new AsyncInterruptedException("Execution interrupted:" + e, e);
         } catch (ExecutionException e) {
+            if (e.getCause() instanceof DispatchException) {
+                throw (DispatchException) e.getCause();
+            }
             throw new AsyncErrorException("Execution error:" + e, e);
         } catch (TimeoutException e) {
             throw new AsyncTimeoutException("Execution timed out:" + e, e);
         }
     }
 
-    public T getResult(final long timeout, final TimeUnit unit) throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException {
+    public T getResult(final long timeout, final TimeUnit unit) throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
         try {
             return this.wrappedFuture.get(timeout, unit);
         } catch (InterruptedException e) {
             throw new AsyncInterruptedException("Execution interrupted:" + e, e);
         } catch (ExecutionException e) {
+            if (e.getCause() instanceof DispatchException) {
+                throw (DispatchException) e.getCause();
+            }
             throw new AsyncErrorException("Execution error:" + e, e);
         } catch (TimeoutException e) {
             throw new AsyncTimeoutException("Execution timed out:" + e, e);

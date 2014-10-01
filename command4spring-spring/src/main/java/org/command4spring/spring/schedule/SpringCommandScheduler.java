@@ -1,4 +1,4 @@
-package org.command4spring.schedule;
+package org.command4spring.spring.schedule;
 
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.result.Result;
+import org.command4spring.schedule.CommandScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.scheduling.TaskScheduler;
@@ -21,9 +22,9 @@ import org.springframework.scheduling.TaskScheduler;
  * 
  * @author pborbas
  */
-public class DefaultCommandScheduler implements CommandScheduler {
+public class SpringCommandScheduler implements CommandScheduler {
 
-    private static final Log LOG = LogFactory.getLog(DefaultCommandScheduler.class);
+    private static final Log LOG = LogFactory.getLog(SpringCommandScheduler.class);
 
     private Dispatcher dispatcher;
     private List<ScheduledCommand> scheduledCommands;

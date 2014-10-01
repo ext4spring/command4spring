@@ -30,12 +30,13 @@
 	</developers>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.6</java.version>
+		<java.version>1.7</java.version>
 		<spring.version>3.2.0.RELEASE</spring.version>
 	</properties>
 
 	<modules>
 		<module>command4spring-core</module>
+		<module>command4spring-spring</module>
 		<!-- <module>command4spring-jms</module> -->
 		<module>command4spring-xml</module>
 		<module>command4spring-remote</module>
@@ -50,6 +51,11 @@
 			<dependency>
 				<groupId>org.ext4spring</groupId>
 				<artifactId>command4spring-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ext4spring</groupId>
+				<artifactId>command4spring-spring</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

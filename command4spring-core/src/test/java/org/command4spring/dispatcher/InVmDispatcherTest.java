@@ -34,9 +34,9 @@ public class InVmDispatcherTest {
     @Test(expected = ActionNotFoundException.class)
     public void testDispatcherThrowsExceptionIfNoActionFound() throws DispatchException {
         InVmDispatcher dispatcher = new InVmDispatcher();
-        List<Action<? extends Command<? extends Result>, ? extends Result>> actions = new ArrayList<Action<? extends Command<? extends Result>, ? extends Result>>();
+        List<Action<? extends Command<? extends Result>, ? extends Result>> actions = new ArrayList<>();
         dispatcher.setActions(actions);
-        dispatcher.dispatch(new SampleCommand());
+        dispatcher.dispatch(new SampleCommand()).getResult();
     }
 
     @Test(expected = DuplicateActionException.class)
@@ -55,6 +55,6 @@ public class InVmDispatcherTest {
         actions.add(new SampleAction());
         dispatcher.setActions(actions);
         SampleCommand invalidCommand=new SampleCommand("123456");
-        dispatcher.dispatch(invalidCommand);
+        dispatcher.dispatch(invalidCommand).getResult();
     }
 }

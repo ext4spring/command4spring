@@ -17,6 +17,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.ext4spring</groupId>
+			<artifactId>command4spring-spring</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ext4spring</groupId>
 			<artifactId>command4spring-xml</artifactId>
 		</dependency>
 		<dependency>

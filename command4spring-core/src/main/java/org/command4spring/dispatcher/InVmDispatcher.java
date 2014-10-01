@@ -3,6 +3,7 @@ package org.command4spring.dispatcher;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,7 +13,6 @@ import org.command4spring.exception.ActionNotFoundException;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.exception.DuplicateActionException;
 import org.command4spring.result.Result;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * InVm implementation of the {@link Dispatcher}
@@ -21,6 +21,14 @@ public class InVmDispatcher extends AbstractDispatcher implements Dispatcher {
 
     private static final Log LOGGER = LogFactory.getLog(InVmDispatcher.class);
     private Map<Class<?>, Action<? extends Command<? extends Result>, ? extends Result>> actionsMap = new HashMap<Class<?>, Action<? extends Command<? extends Result>, ? extends Result>>();
+
+    public InVmDispatcher() {
+        super();
+    }
+
+    public InVmDispatcher(final ExecutorService executorService) {
+        super(executorService);
+    }
 
     @Override
     public <C extends Command<R>, R extends Result> R execute(final C command) throws DispatchException {
@@ -35,7 +43,6 @@ public class InVmDispatcher extends AbstractDispatcher implements Dispatcher {
         throw new ActionNotFoundException("Action not found for command:" + command);
     }
 
-    @Autowired(required = false)
     public void setActions(final List<Action<? extends Command<? extends Result>, ? extends Result>> actions) throws DuplicateActionException {
         this.actionsMap = new HashMap<Class<?>, Action<? extends Command<? extends Result>, ? extends Result>>();
         for (Action<? extends Command<? extends Result>, ? extends Result> action : actions) {

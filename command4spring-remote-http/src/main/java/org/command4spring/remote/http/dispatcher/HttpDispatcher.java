@@ -19,12 +19,10 @@ import org.command4spring.remote.dispatcher.RemoteDispatcher;
 import org.command4spring.remote.exception.RemoteDispatchException;
 import org.command4spring.result.Result;
 import org.command4spring.serializer.Serializer;
-import org.springframework.stereotype.Service;
 
 /**
  * Remote HTTP implementation of the {@link Dispatcher}
  */
-@Service
 public class HttpDispatcher extends AbstractDispatcher implements RemoteDispatcher {
 
     private final CloseableHttpClient httpclient;

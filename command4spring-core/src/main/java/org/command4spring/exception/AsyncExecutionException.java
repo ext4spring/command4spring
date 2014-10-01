@@ -7,7 +7,7 @@ package org.command4spring.exception;
 public class AsyncExecutionException extends DispatchException {
     private static final long serialVersionUID = 1L;
 
-    public AsyncExecutionException(final String message, final Exception e) {
+    public AsyncExecutionException(final String message, final Throwable e) {
         super(message, e);
     }
 

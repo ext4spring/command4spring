@@ -1,4 +1,4 @@
-package org.command4spring.schedule;
+package org.command4spring.spring.schedule;
 
 import org.command4spring.command.Command;
 import org.command4spring.result.Result;
