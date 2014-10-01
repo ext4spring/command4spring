@@ -2,12 +2,10 @@ package org.command4spring.dispatcher;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,7 +28,7 @@ public abstract class AbstractDispatcher implements Dispatcher {
 
     public AbstractDispatcher() {
         int cores = Runtime.getRuntime().availableProcessors();
-        this.executorService=new ThreadPoolExecutor(1, cores, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(100));
+        this.executorService=new ForkJoinPool(cores);
     }
 
     public AbstractDispatcher(final ExecutorService executorService) {

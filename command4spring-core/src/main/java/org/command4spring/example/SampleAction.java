@@ -17,9 +17,6 @@ public class SampleAction implements Action<SampleCommand, SampleResult> {
 
     @Override
     public Action<SampleCommand, SampleResult> validate(final SampleCommand command) throws CommandValidationException {
-        if (command.getData()!=null && command.getData().length()>5) {
-            throw new CommandValidationException(command, "Invalid SampleCommand.", "Data max size is 5 characters");
-        }
         return this;
     }
 }
