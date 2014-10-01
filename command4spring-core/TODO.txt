@@ -17,6 +17,14 @@ Remove Spring dependency and only add it as new module(s)
 -SpringInVmDispatcher (autowired, transactional, async)
 
 Dispatcher implementations:
+-Rest HTTP dispatcher
+	-Annotations (jaxrs) could be used on commands to modify url and http method
+	-URL should reflect to command and should contain resource ID for caching
+		Example: 
+			class GetDataCommand
+				int dataId
+			GET /rest/data/{dataId}
+	-Cache headers
 -Jms dispatcher
 	-Implement as remote dispatcher and receiver
 	-configurable message format
@@ -49,14 +57,13 @@ Camel integration
 	-Result could go to body or to header or just drop
 	-Converter to make command from other types
 
-Security
+Spring security integration
 	Run as 
 	Run as async (support for current user and other user too)
 	RolesAllowed
 
 Bulk dispatcher
 
-Rest project like the JMS one if needed
 
 Example implementation:
 Rest interface
