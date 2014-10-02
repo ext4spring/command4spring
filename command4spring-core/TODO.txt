@@ -11,9 +11,12 @@ TODO/IDEAS
 
 V1.0
 
+DONE:
 Remove Spring dependency and only add it as new module(s)
 -InVmDispatcher
 	-Configurable executor. Prepare also to ForkJoinPool
+
+TODO:
 -SpringInVmDispatcher (autowired, transactional, async)
 
 Dispatcher implementations:

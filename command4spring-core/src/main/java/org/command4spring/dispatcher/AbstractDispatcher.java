@@ -27,8 +27,7 @@ public abstract class AbstractDispatcher implements Dispatcher {
     private List<ResultFilter> resultFilters = new LinkedList<ResultFilter>();
 
     public AbstractDispatcher() {
-        int cores = Runtime.getRuntime().availableProcessors();
-        this.executorService=new ForkJoinPool(cores);
+        this.executorService=new ForkJoinPool();
     }
 
     public AbstractDispatcher(final ExecutorService executorService) {

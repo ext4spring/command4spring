@@ -7,7 +7,7 @@
 	
 	<bean id="serializer" class="org.command4spring.xml.serializer.XmlSerializer" />
 	<bean id="dispatcher" class="org.command4spring.spring.dispatcher.SpringInVmDispatcher"></bean>
-	<bean class="org.command4spring.remote.receiver.DefaultCommandReceiver">
+	<bean id="commandReceiver" class="org.command4spring.remote.receiver.DefaultCommandReceiver">
 		<constructor-arg ref="serializer" />
 		<constructor-arg ref="dispatcher" />
 	</bean>
