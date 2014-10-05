@@ -20,4 +20,7 @@ public interface Dispatcher {
      *             if the action execution failed.
      */
     <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(C command) throws DispatchException;
+    <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(C command, DispatcherCallback callback) throws DispatchException;
+
+    
 }

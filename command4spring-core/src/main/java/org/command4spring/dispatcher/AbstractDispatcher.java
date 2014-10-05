@@ -23,9 +23,10 @@ public abstract class AbstractDispatcher implements Dispatcher {
     private static final Log LOGGER = LogFactory.getLog(AbstractDispatcher.class);
 
     private final ExecutorService executorService;
+    private final DispatcherCallback defaultCallback=new NopDispatcherCallback();
     private List<CommandFilter> commandFilters = new LinkedList<CommandFilter>();
     private List<ResultFilter> resultFilters = new LinkedList<ResultFilter>();
-
+    
     public AbstractDispatcher() {
         this.executorService=new ForkJoinPool();
     }
@@ -35,28 +36,64 @@ public abstract class AbstractDispatcher implements Dispatcher {
         this.executorService = executorService;
     }
 
+    private class NopDispatcherCallback implements DispatcherCallback {
+
+		@Override
+		public <C extends Command<R>, R extends Result> void beforeDispatch(
+				C command) throws DispatchException {
+		}
+
+		@Override
+		public <C extends Command<R>, R extends Result> void onError(C command,
+				DispatchException e) throws DispatchException {
+		}
+
+		@Override
+		public <C extends Command<R>, R extends Result> void onSuccess(
+				C command, R result) throws DispatchException {
+		}
+    	
+    }
+    
     @Override
     public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(final C command) throws DispatchException {
-        Future<R> future=this.executorService.submit(new Callable<R>() {
+    	return this.dispatch(command, defaultCallback);
+    }
+
+    @Override
+    public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(
+    		final C command, final DispatcherCallback callback) throws DispatchException {
+    	Future<R> future=this.executorService.submit(new Callable<R>() {
             @Override
             public R call() throws Exception {
-                return AbstractDispatcher.this.executeCommonWorkflow(command);
+                return AbstractDispatcher.this.executeCommonWorkflow(command, callback);
             }
         });
         return new ResultFuture<R>(future);
     }
-
-    protected <C extends Command<R>, R extends Result> R executeCommonWorkflow(final C command) throws DispatchException {
+    
+    protected <C extends Command<R>, R extends Result> R executeCommonWorkflow(final C command, DispatcherCallback callback) throws DispatchException {
         LOGGER.debug("Execting command:" + command);
         long start = System.currentTimeMillis();
-        R result = this.filterResult(this.execute(this.filterCommand(command)));
-        result.setCommandId(command.getCommandId());
-        LOGGER.debug("Finished command:" + command + " (" + (System.currentTimeMillis() - start) + "msec)");
+        R result;
+		try {
+			callback.beforeDispatch(command);
+			result = this.filterResult(this.execute(this.filterCommand(command)));
+			result.setCommandId(command.getCommandId());
+			callback.onSuccess(command, result);
+	        LOGGER.debug("Finished command:" + command + " (" + (System.currentTimeMillis() - start) + "msec)");
+		} catch (DispatchException e) {
+			callback.onError(command, e);
+			throw e;
+		}catch (Throwable e) {
+			DispatchException dispatchException=new DispatchException("Unknown error while executing command:"+e, e);
+			callback.onError(command, dispatchException);
+			throw dispatchException;
+		}
         return result;
     }
 
-
-    protected <C extends Command<R>, R extends Result> C filterCommand(final C command) throws DispatchException {
+	protected <C extends Command<R>, R extends Result> C filterCommand(final C command) throws DispatchException {
         CommandFilterChain filterChain = new DefaultCommandFilterChain(this.commandFilters);
         return filterChain.filter(command);
     }

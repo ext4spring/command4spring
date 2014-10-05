@@ -1,0 +1,8 @@
+dependencies {
+	compile project(':command4spring-remote')
+	compile 'org.apache.httpcomponents:httpclient:'+httpClientVersion
+	compile 'org.apache.commons:commons-io:'+commonsIoVersion
+
+	provided group: 'org.apache.tomcat', name: 'tomcat-servlet-api', version: tomcatServletApiVersion
+
+}

@@ -5,7 +5,8 @@ import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.result.Result;
 import org.command4spring.serializer.Serializer;
-
+//TODO: no need for this for HTTP. deletable?
+@Deprecated
 public class DefaultCommandReceiver implements CommandReceiver {
 
     private final Serializer serializer;

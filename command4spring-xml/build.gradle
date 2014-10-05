@@ -1,0 +1,4 @@
+dependencies {
+	compile project(':command4spring-core')
+	compile 'com.thoughtworks.xstream:xstream:'+xstreamVersion
+}

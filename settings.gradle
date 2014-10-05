@@ -1,0 +1,1 @@
+include "command4spring-core","command4spring-remote","command4spring-remote-http","command4spring-sample-common","command4spring-sample-service","command4spring-sample-web","command4spring-spring","command4spring-xml"

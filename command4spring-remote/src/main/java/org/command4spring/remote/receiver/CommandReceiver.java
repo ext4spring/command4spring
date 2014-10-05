@@ -1,7 +1,9 @@
 package org.command4spring.remote.receiver;
 
 import org.command4spring.exception.DispatchException;
+//TODO: no need for this for HTTP. deletable?
 
+@Deprecated
 public interface CommandReceiver {
 
     /**

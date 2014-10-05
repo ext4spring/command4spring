@@ -1,0 +1,11 @@
+apply plugin: 'war'
+dependencies {
+	compile project(':command4spring-core')
+   	
+   	compile group: 'org.springframework', name: 'spring-web', version: springVersion
+    compile group: 'org.springframework', name: 'spring-tx', version: springVersion
+    compile group: 'org.springframework', name: 'spring-context', version: springVersion
+    compile group: 'org.springframework', name: 'spring-core', version: springVersion
+
+	providedCompile group: 'org.apache.tomcat', name: 'tomcat-servlet-api', version: tomcatServletApiVersion
+}

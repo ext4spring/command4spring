@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.remote.http.dispatcher.HttpDispatcher;
 import org.command4spring.result.ResultFuture;
@@ -19,14 +21,14 @@ import org.command4spring.xml.serializer.XmlSerializer;
  */
 public class GetTimeServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
+    private static final Log LOGGER=LogFactory.getLog(GetTimeServlet.class);
     private final Dispatcher sampleDispatcher;
 
     /**
      * Default constructor. 
      */
     public GetTimeServlet() {
-        this.sampleDispatcher=new HttpDispatcher(new XmlSerializer(), "http://localhost:8080/execute");
+        this.sampleDispatcher=new HttpDispatcher(new XmlSerializer(), "http://localhost:8080/command4spring-sample-service/execute");
     }
 
     /**
@@ -35,10 +37,12 @@ public class GetTimeServlet extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
         try {
+            LOGGER.debug("Incoming request");
             GetTimeCommand getTimeCommand=new GetTimeCommand();
             ResultFuture<StringResult> getTimeResult=this.sampleDispatcher.dispatch(getTimeCommand);
-
+            LOGGER.debug("Command sent, waiting for response");
             String time=getTimeResult.getResult().getValue();
+            LOGGER.debug("Result:"+time);
             response.getWriter().write(time);
         } catch (Throwable e) {
             throw new ServletException(e);
