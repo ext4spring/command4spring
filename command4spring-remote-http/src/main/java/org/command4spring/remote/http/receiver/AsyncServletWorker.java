@@ -23,7 +23,7 @@ public class AsyncServletWorker implements Runnable {
 	LOGGER.info("AsyncServletWorker started");
 	while (this.running) {
 	    try {
-		final AsyncServletProcess process = processes.poll(5, TimeUnit.SECONDS);
+		AsyncServletProcess process = processes.poll(5, TimeUnit.SECONDS);
 		if (process != null) {
 		    LOGGER.debug("executing async process. queue size:"+processes.size());
 		    process.execute();

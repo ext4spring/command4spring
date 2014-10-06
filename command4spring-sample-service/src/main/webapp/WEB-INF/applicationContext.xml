@@ -5,7 +5,5 @@
 	
 	<context:component-scan base-package="org.command4spring.sample.service"></context:component-scan>
 	
-	<bean id="serializer" class="org.command4spring.xml.serializer.XmlSerializer" />
-	<bean id="dispatcher" class="org.command4spring.spring.dispatcher.SpringInVmDispatcher"></bean>	
 
 </beans>

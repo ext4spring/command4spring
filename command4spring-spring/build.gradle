@@ -1,6 +1,7 @@
 apply plugin: 'war'
 dependencies {
 	compile project(':command4spring-core')
+	compile project(':command4spring-remote-http')
    	
    	compile group: 'org.springframework', name: 'spring-web', version: springVersion
     compile group: 'org.springframework', name: 'spring-tx', version: springVersion

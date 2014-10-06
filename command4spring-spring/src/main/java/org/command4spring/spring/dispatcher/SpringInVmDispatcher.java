@@ -13,7 +13,6 @@ import org.command4spring.result.Result;
 import org.command4spring.result.ResultFuture;
 import org.command4spring.spring.action.DispatchAction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -30,7 +29,6 @@ public class SpringInVmDispatcher extends InVmDispatcher implements Dispatcher {
     }
 
     @Override
-    @Async
     @Transactional
     public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(final C command) throws DispatchException {
         return super.dispatch(command);

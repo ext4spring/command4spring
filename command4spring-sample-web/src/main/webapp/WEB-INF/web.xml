@@ -4,14 +4,14 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
-  <servlet>
-  	<servlet-name>GetTimeServlet</servlet-name>
-  	<display-name>GetTimeServlet</display-name>
-  	<description></description>
-  	<servlet-class>org.ext4spring.sample.web.GetTimeServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  	<servlet-name>GetTimeServlet</servlet-name>
-  	<url-pattern>/time</url-pattern>
-  </servlet-mapping>
+<!--   <servlet> -->
+<!--   	<servlet-name>GetTimeServlet</servlet-name> -->
+<!--   	<display-name>GetTimeServlet</display-name> -->
+<!--   	<description></description> -->
+<!--   	<servlet-class>org.ext4spring.sample.web.GetTimeServlet</servlet-class> -->
+<!--   </servlet> -->
+<!--   <servlet-mapping> -->
+<!--   	<servlet-name>GetTimeServlet</servlet-name> -->
+<!--   	<url-pattern>/time</url-pattern> -->
+<!--   </servlet-mapping> -->
 </web-app>
