@@ -1,8 +1,11 @@
 package org.command4spring.sample.common.command;
 
+import javax.ws.rs.Path;
+
 import org.command4spring.command.AbstractCommand;
 import org.command4spring.result.VoidResult;
 
+@Path("/sleep/{time}")
 public class SleepCommand extends AbstractCommand<VoidResult>{
 
     /**
@@ -16,7 +19,7 @@ public class SleepCommand extends AbstractCommand<VoidResult>{
 	super();
 	this.time = time;
     }
-    
+   
     public long getTime() {
 	return time;
     }

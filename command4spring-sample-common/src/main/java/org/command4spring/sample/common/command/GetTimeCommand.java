@@ -9,5 +9,5 @@ public class GetTimeCommand extends AbstractCommand<StringResult>{
      * 
      */
     private static final long serialVersionUID = 1L;
-
-}
+    
+ }

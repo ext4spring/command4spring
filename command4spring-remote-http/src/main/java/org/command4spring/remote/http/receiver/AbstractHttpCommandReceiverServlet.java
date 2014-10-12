@@ -9,39 +9,55 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.command4spring.command.Command;
 import org.command4spring.dispatcher.Dispatcher;
-import org.command4spring.exception.AsyncInterruptedException;
-import org.command4spring.exception.CommandSerializationException;
+import org.command4spring.exception.DispatchException;
+import org.command4spring.remote.http.mapper.HttpMapper;
 import org.command4spring.result.Result;
-import org.command4spring.serializer.Serializer;
 
-public abstract class AbstractCommandReceiverServlet extends HttpServlet {
+public abstract class AbstractHttpCommandReceiverServlet extends HttpServlet {
 
-    private static final Log LOGGER = LogFactory.getLog(AbstractCommandReceiverServlet.class);
+    private static final Log LOGGER = LogFactory.getLog(AbstractHttpCommandReceiverServlet.class);
     private static final long serialVersionUID = 1L;
     public static final String DISPATCHER_ATTRIBUTE = "dispatcher";
-    public static final String SERIALIZER_ATTRIBUTE = "serializer";
+    public static final String HTTP_MAPPER_ATTRIBUTE = "http_mapper";
     public static final String ASYNC_WORKER_ATTRIBUTE = "async_worker";
-    private Serializer serializer;
+    private HttpMapper httpMapper;
     private Dispatcher dispatcher;
     private AsyncServletWorker asyncWorker;
 
     @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	this.process(req, resp);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	this.process(req, resp);
+    }
+    
+    @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+	this.process(req, resp);
+    }
+
+    @Override
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+	this.process(req, resp);
+    }
+
+    protected void process(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 	LOGGER.debug("message received");
 	if (req.isAsyncSupported()) {
 	    final AsyncContext acontext = req.startAsync();
 	    LOGGER.debug("async context started");
 	    try {
-		String textCommand = IOUtils.toString(acontext.getRequest().getInputStream());
-		Command<? extends Result> command = this.serializer.toCommand(textCommand);
-		AsyncServletProcess asyncServletProcess = new AsyncServletProcess(acontext, command,  this.serializer, this.dispatcher);
+		Command<? extends Result> command = this.httpMapper.parseRequest(req);
+		AsyncServletProcess asyncServletProcess = new AsyncServletProcess(acontext, command, this.httpMapper, this.dispatcher);
 		this.asyncWorker.queue(asyncServletProcess);
-	    } catch (AsyncInterruptedException | CommandSerializationException e) {
+	    } catch (DispatchException e) {
 		throw new ServletException(e.getMessage(), e);
 	    }
 	} else {
@@ -50,16 +66,11 @@ public abstract class AbstractCommandReceiverServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-	resp.getWriter().print("Command receiver listening...");
-    }
-
-    @Override
     public void init(final ServletConfig config) throws ServletException {
 	super.init(config);
 	this.asyncWorker = this.initAsyncWorker(config);
-	this.serializer = initSerializer(config);
 	this.dispatcher = initDispatcher(config);
+	this.httpMapper = initHttpMapper(config);
 	// TODO: add this to listener and the worker should receive from queue
 	// on multiple threads since it is a bottleneck
 	new Thread(this.asyncWorker).start();
@@ -74,7 +85,7 @@ public abstract class AbstractCommandReceiverServlet extends HttpServlet {
 	return new AsyncServletWorker();
     }
 
-    protected abstract Serializer initSerializer(final ServletConfig config) throws ServletException;
+    protected abstract HttpMapper initHttpMapper(final ServletConfig config) throws ServletException;
 
     protected abstract Dispatcher initDispatcher(final ServletConfig config) throws ServletException;
 

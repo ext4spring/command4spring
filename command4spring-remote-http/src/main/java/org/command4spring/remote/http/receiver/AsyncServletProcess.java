@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
@@ -12,19 +13,19 @@ import org.command4spring.command.Command;
 import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.dispatcher.DispatcherCallback;
 import org.command4spring.exception.DispatchException;
+import org.command4spring.remote.http.mapper.HttpMapper;
 import org.command4spring.result.Result;
-import org.command4spring.serializer.Serializer;
 
 public class AsyncServletProcess implements DispatcherCallback {
     private static final Log LOGGER = LogFactory.getLog(AsyncServletProcess.class);
 
-    private final Serializer serializer;
+    private final HttpMapper httpMapper;
     private final Dispatcher dispatcher;
     private final Command<? extends Result> command;
     private final AsyncContext asyncContext;
 
-    public AsyncServletProcess(final AsyncContext asyncContext, final Command<? extends Result> command, final Serializer serializer, final Dispatcher dispatcher) {
-	this.serializer = serializer;
+    public AsyncServletProcess(final AsyncContext asyncContext, final Command<? extends Result> command, HttpMapper httpMapper, final Dispatcher dispatcher) {
+	this.httpMapper = httpMapper;
 	this.dispatcher = dispatcher;
 	this.command = command;
 	this.asyncContext = asyncContext;
@@ -41,7 +42,7 @@ public class AsyncServletProcess implements DispatcherCallback {
 	    this.dispatcher.dispatch(this.command, this);
 	} catch (DispatchException e) {
 	    LOGGER.error("Error while processing request:" + e.getMessage(), e);
-	    writeErrorResponse(asyncContext.getResponse(), e);
+	    this.httpMapper.writeError(e, (HttpServletResponse) this.asyncContext.getResponse());
 	    this.asyncContext.complete();
 	}
     }
@@ -53,19 +54,19 @@ public class AsyncServletProcess implements DispatcherCallback {
     @Override
     public <C extends Command<R>, R extends Result> void onError(C command, DispatchException e) throws DispatchException {
 	LOGGER.error(e.getMessage(), e);
-	writeErrorResponse(asyncContext.getResponse(), e);
-	this.asyncContext.complete();
-	LOGGER.debug("async process finished");
+	try {
+	    this.httpMapper.writeError(e, (HttpServletResponse) this.asyncContext.getResponse());
+	} finally {
+	    this.asyncContext.complete();
+	    LOGGER.debug("async process finished");
+	}
     }
 
     @Override
     public <C extends Command<R>, R extends Result> void onSuccess(C command, R result) throws DispatchException {
 	try {
 	    LOGGER.debug("command finished, converting to text response");
-	    String textResult = serializer.toText(result);
-	    IOUtils.write(textResult, asyncContext.getResponse().getOutputStream());
-	} catch (IOException e) {
-	    this.onError(command, new DispatchException("Error while writing response to HTTP output stream:" + e, e));
+	    this.httpMapper.writeResponse(result, (HttpServletResponse) this.asyncContext.getResponse());
 	} finally {
 	    asyncContext.complete();
 	    LOGGER.debug("async process finished");

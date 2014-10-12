@@ -12,6 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.remote.http.dispatcher.HttpDispatcher;
+import org.command4spring.remote.http.mapper.RestHttpMapper;
 import org.command4spring.result.ResultFuture;
 import org.command4spring.result.StringResult;
 import org.command4spring.sample.common.command.GetTimeCommand;
@@ -30,7 +31,8 @@ public class GetTimeServlet extends HttpServlet {
      * Default constructor.
      */
     public GetTimeServlet() {
-	this.httpDispatcher = new HttpDispatcher(new XmlSerializer(), "http://localhost:8080/command4spring-sample-service/execute");
+//	this.httpDispatcher = new HttpDispatcherOLD(new XmlSerializer(), "http://localhost:8080/command4spring-sample-service/execute");
+	this.httpDispatcher=new HttpDispatcher(new RestHttpMapper(new XmlSerializer()), "http://localhost:8080/command4spring-sample-service/execute");
     }
 
     /**

@@ -17,6 +17,6 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>CommandReceiverServlet</servlet-name>
-		<url-pattern>/execute</url-pattern>
+		<url-pattern>/execute/*</url-pattern>
 	</servlet-mapping>
 </web-app>
