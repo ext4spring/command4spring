@@ -1,0 +1,100 @@
+:command4spring-remote-jms:dependencies
+
+------------------------------------------------------------
+Project :command4spring-remote-jms
+------------------------------------------------------------
+
+archives - Configuration for archive artifacts.
+No dependencies
+
+compile - Compile classpath for source set 'main'.
++--- commons-logging:commons-logging:1.2+ -> 1.2
++--- project :command4spring-remote
+|    +--- commons-logging:commons-logging:1.2+ -> 1.2
+|    \--- project :command4spring-core
+|         \--- commons-logging:commons-logging:1.2+ -> 1.2
++--- org.apache.httpcomponents:httpclient:4.3.5
+|    +--- org.apache.httpcomponents:httpcore:4.3.2
+|    +--- commons-logging:commons-logging:1.1.3 -> 1.2
+|    \--- commons-codec:commons-codec:1.6
++--- org.apache.commons:commons-io:1.3.2
+|    \--- commons-io:commons-io:1.3.2
++--- javax.jms:jms:1.1
+\--- org.apache.tomcat:tomcat-servlet-api:7.0.54
+
+default - Configuration for default artifacts.
++--- commons-logging:commons-logging:1.2+ -> 1.2
++--- project :command4spring-remote
+|    +--- commons-logging:commons-logging:1.2+ -> 1.2
+|    \--- project :command4spring-core
+|         \--- commons-logging:commons-logging:1.2+ -> 1.2
++--- org.apache.httpcomponents:httpclient:4.3.5
+|    +--- org.apache.httpcomponents:httpcore:4.3.2
+|    +--- commons-logging:commons-logging:1.1.3 -> 1.2
+|    \--- commons-codec:commons-codec:1.6
++--- org.apache.commons:commons-io:1.3.2
+|    \--- commons-io:commons-io:1.3.2
++--- javax.jms:jms:1.1
+\--- org.apache.tomcat:tomcat-servlet-api:7.0.54
+
+provided
+\--- org.apache.tomcat:tomcat-servlet-api:7.0.54
+
+runtime - Runtime classpath for source set 'main'.
++--- commons-logging:commons-logging:1.2+ -> 1.2
++--- project :command4spring-remote
+|    +--- commons-logging:commons-logging:1.2+ -> 1.2
+|    \--- project :command4spring-core
+|         \--- commons-logging:commons-logging:1.2+ -> 1.2
++--- org.apache.httpcomponents:httpclient:4.3.5
+|    +--- org.apache.httpcomponents:httpcore:4.3.2
+|    +--- commons-logging:commons-logging:1.1.3 -> 1.2
+|    \--- commons-codec:commons-codec:1.6
++--- org.apache.commons:commons-io:1.3.2
+|    \--- commons-io:commons-io:1.3.2
++--- javax.jms:jms:1.1
+\--- org.apache.tomcat:tomcat-servlet-api:7.0.54
+
+testCompile - Compile classpath for source set 'test'.
++--- commons-logging:commons-logging:1.2+ -> 1.2
++--- project :command4spring-remote
+|    +--- commons-logging:commons-logging:1.2+ -> 1.2
+|    \--- project :command4spring-core
+|         \--- commons-logging:commons-logging:1.2+ -> 1.2
++--- org.apache.httpcomponents:httpclient:4.3.5
+|    +--- org.apache.httpcomponents:httpcore:4.3.2
+|    +--- commons-logging:commons-logging:1.1.3 -> 1.2
+|    \--- commons-codec:commons-codec:1.6
++--- org.apache.commons:commons-io:1.3.2
+|    \--- commons-io:commons-io:1.3.2
++--- javax.jms:jms:1.1
++--- org.apache.tomcat:tomcat-servlet-api:7.0.54
++--- log4j:log4j:1.2.17
++--- junit:junit:4.11
+|    \--- org.hamcrest:hamcrest-core:1.3
+\--- org.mockito:mockito-all:1.9.5
+
+testRuntime - Runtime classpath for source set 'test'.
++--- commons-logging:commons-logging:1.2+ -> 1.2
++--- project :command4spring-remote
+|    +--- commons-logging:commons-logging:1.2+ -> 1.2
+|    \--- project :command4spring-core
+|         \--- commons-logging:commons-logging:1.2+ -> 1.2
++--- org.apache.httpcomponents:httpclient:4.3.5
+|    +--- org.apache.httpcomponents:httpcore:4.3.2
+|    +--- commons-logging:commons-logging:1.1.3 -> 1.2
+|    \--- commons-codec:commons-codec:1.6
++--- org.apache.commons:commons-io:1.3.2
+|    \--- commons-io:commons-io:1.3.2
++--- javax.jms:jms:1.1
++--- org.apache.tomcat:tomcat-servlet-api:7.0.54
++--- log4j:log4j:1.2.17
++--- junit:junit:4.11
+|    \--- org.hamcrest:hamcrest-core:1.3
+\--- org.mockito:mockito-all:1.9.5
+
+(*) - dependencies omitted (listed previously)
+
+BUILD SUCCESSFUL
+
+Total time: 9.27 secs

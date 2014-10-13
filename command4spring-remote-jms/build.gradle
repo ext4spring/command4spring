@@ -1,0 +1,14 @@
+dependencies {
+    compile project(':command4spring-remote')
+    compile 'javax.jms:jms-api:1.1-rev-1'
+
+    testCompile project(':command4spring-spring')
+    testCompile project(':command4spring-xml')
+    
+    testCompile group: 'org.springframework', name: 'spring-context', version: springVersion
+    testCompile group: 'org.springframework', name: 'spring-core', version: springVersion
+    testCompile group: 'org.springframework', name: 'spring-jms', version: springVersion
+    testCompile group: 'org.springframework', name: 'spring-test', version: springVersion
+    testCompile 'org.apache.activemq:activemq-spring:'+activemqVersion
+    testCompile 'org.apache.activemq:activemq-all:'+activemqVersion
+}

@@ -10,39 +10,56 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
 		http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.2.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
-
-	<context:component-scan base-package="org.command4spring"/>
-
-	<!-- JMS environment settings -->
-	<!-- 	Activemq connection factory -->
+	
+	<bean class="org.command4spring.example.SampleAction"></bean>
+	<bean class="org.command4spring.remote.jms.dispatch.TestAction"></bean>
+	<bean id="dispatcher" class="org.command4spring.spring.dispatcher.SpringInVmDispatcher"/>
+	<bean id="serializer" class="org.command4spring.xml.serializer.XmlSerializer"/>
+	<!-- JMS environment settings -->	
 	<bean id="AmqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
 		<constructor-arg index="0" value="vm://localhost?broker.persistent=false" />
 	</bean>
-	<!-- 	ConnectionFactory Definition -->
 	<bean id="ConnectionFactory"
 		class="org.springframework.jms.connection.CachingConnectionFactory">
 		<constructor-arg ref="AmqConnectionFactory" />
 	</bean>
-	<!-- 	Default Destination Queue Definition -->
+
 	<bean id="CommandDestination" class="org.apache.activemq.command.ActiveMQQueue">
 		<constructor-arg index="0" value="QUEUE.COMMAND" />
 	</bean>
+	<bean id="CommandJmsTemplate" class="org.command4spring.remote.jms.dispatch.JmsTemplate">
+		<constructor-arg ref="ConnectionFactory"/>
+		<constructor-arg ref="CommandDestination"/>
+	</bean>
+	<bean id="ResultDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg index="0" value="QUEUE.RESULT" />
+	</bean>
+	<bean id="ResultJmsTemplate" class="org.command4spring.remote.jms.dispatch.JmsTemplate">
+		<constructor-arg ref="ConnectionFactory"/>
+		<constructor-arg ref="ResultDestination"/>
+	</bean>
+
+
 
 	<!-- Dispatcher that sends through JMS -->
-	<bean id="CommandJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-		<property name="connectionFactory" ref="ConnectionFactory" />
-		<property name="defaultDestination" ref="CommandDestination" />
-	</bean>
-	<bean id="CommandJmsDispatcherService" class="org.command4spring.jms.service.DefaultJmsDispatcherService">
-		<property name="jmsTemplate" ref="CommandJmsTemplate"/>
+	<bean id="JmsDispatcher" class="org.command4spring.remote.jms.dispatch.JmsDispatcher">
+		<constructor-arg ref="CommandJmsTemplate"/>
+		<constructor-arg ref="ResultJmsTemplate"/>
+		<constructor-arg ref="serializer"/>
 	</bean>
 	
 	<!-- Listener that processes the command -->
-	<bean id="CommandMessageListener" class="org.command4spring.jms.service.DispatcherMessageListener"/>
+	<bean id="CommandMessageListener" class="org.command4spring.remote.jms.receiver.JmsCommandReceiverListener">
+		<constructor-arg ref="dispatcher"/>
+		<constructor-arg ref="serializer"/>
+		<constructor-arg ref="ResultJmsTemplate"/>
+	</bean>
 	<bean id="CommandMessageListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
 		<property name="connectionFactory" ref="ConnectionFactory" />
 		<property name="destination" ref="CommandDestination" />
 		<property name="messageListener" ref="CommandMessageListener" />
 	</bean>
+	
+
 
 </beans>
