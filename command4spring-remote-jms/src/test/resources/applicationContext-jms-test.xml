@@ -13,6 +13,7 @@
 	
 	<bean class="org.command4spring.example.SampleAction"></bean>
 	<bean class="org.command4spring.remote.jms.dispatch.TestAction"></bean>
+	<bean class="org.command4spring.remote.jms.dispatch.TestFailAction"></bean>
 	<bean id="dispatcher" class="org.command4spring.spring.dispatcher.SpringInVmDispatcher"/>
 	<bean id="serializer" class="org.command4spring.xml.serializer.XmlSerializer"/>
 	<!-- JMS environment settings -->	
