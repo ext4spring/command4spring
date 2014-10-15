@@ -7,7 +7,6 @@ import java.util.concurrent.TimeoutException;
 import org.command4spring.example.SampleCommand;
 import org.command4spring.example.SampleResult;
 import org.command4spring.exception.DispatchException;
-import org.command4spring.remote.exception.RemoteDispatchException;
 import org.command4spring.result.NoResult;
 import org.command4spring.result.ResultFuture;
 import org.command4spring.result.VoidResult;
@@ -42,7 +41,7 @@ public class JmsDispatcherTest {
         Thread.sleep(200);
     }
 
-    @Test(expected=RemoteDispatchException.class)
+    @Test(expected=TestDispatchException.class)
     public void testExceptionsAreDelegatedBackToJmsDispatcher() throws DispatchException, InterruptedException, ExecutionException, TimeoutException {
         TestFailCommand command=new TestFailCommand();
         ResultFuture<VoidResult> futureResult=this.dispatcher.dispatch(command);

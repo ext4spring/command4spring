@@ -10,7 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.command4spring.command.Command;
 import org.command4spring.dispatcher.AbstractDispatcher;
 import org.command4spring.exception.DispatchException;
-import org.command4spring.remote.exception.RemoteDispatchException;
+import org.command4spring.exception.ExceptionUtil;
 import org.command4spring.result.NoResult;
 import org.command4spring.result.Result;
 import org.command4spring.serializer.Serializer;
@@ -57,7 +57,7 @@ public class JmsDispatcher extends AbstractDispatcher {
                 LOGGER.debug("Command sent through JMS. Waiting for result. Command ID:" + command.getCommandId());
                 TextMessage resultMessage = this.resultJmsTemplate.receive("JMSCorrelationID='" + command.getCommandId() + "'", TextMessage.class, this.timeout);
                 if (resultMessage.getStringProperty(JmsHeader.RESULT_EXCEPTION_CLASS) != null) {
-                    throw new RemoteDispatchException(resultMessage.getText());
+                    throw ExceptionUtil.instantiateDispatchException(resultMessage.getStringProperty(JmsHeader.RESULT_EXCEPTION_CLASS), resultMessage.getText());
                 } else {
                     String textResult = resultMessage.getText();
                     R result = (R) this.serializer.toResult(textResult);

@@ -14,7 +14,7 @@ public class TestFailAction implements Action<TestFailCommand, VoidResult>{
 
     @Override
     public VoidResult execute(final TestFailCommand command) throws DispatchException {
-        throw new DispatchException("This will always fail:(");
+        throw new TestDispatchException("This will always fail:(");
     }
 
     @Override
