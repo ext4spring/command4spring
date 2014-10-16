@@ -8,8 +8,12 @@ import org.command4spring.result.Result;
 
 public class CommandUtil {
 
+    public static Class<? extends Result> getResultType(final Command<? extends Result> command) {
+        return (Class<? extends Result>) ((ParameterizedType) command.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
     public static boolean isNoResultCommand(final Command<? extends Result> command) {
-        Class<?> resultClass=(Class<?>) ((ParameterizedType) command.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        Class<? extends Result> resultClass=getResultType(command);
         return NoResult.class.isAssignableFrom(resultClass);
     }
 

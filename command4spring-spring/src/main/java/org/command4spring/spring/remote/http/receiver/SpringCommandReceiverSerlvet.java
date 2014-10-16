@@ -4,7 +4,6 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
 import org.command4spring.dispatcher.Dispatcher;
-import org.command4spring.remote.http.mapper.HttpMapper;
 import org.command4spring.remote.http.receiver.AbstractHttpCommandReceiverServlet;
 import org.command4spring.serializer.Serializer;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -13,27 +12,27 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 public class SpringCommandReceiverSerlvet extends AbstractHttpCommandReceiverServlet {
 
     @Override
-    protected Dispatcher initDispatcher(ServletConfig config) throws ServletException {
-	Dispatcher dispatcher;
-	String beanName = config.getInitParameter(DISPATCHER_ATTRIBUTE);
-	if (beanName == null) {
-	    dispatcher = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(Dispatcher.class);
-	} else {
-	    dispatcher = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(beanName, Dispatcher.class);
-	}
-	return dispatcher;
+    protected Dispatcher initDispatcher(final ServletConfig config) throws ServletException {
+        Dispatcher dispatcher;
+        String beanName = config.getInitParameter(DISPATCHER_ATTRIBUTE);
+        if (beanName == null) {
+            dispatcher = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(Dispatcher.class);
+        } else {
+            dispatcher = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(beanName, Dispatcher.class);
+        }
+        return dispatcher;
     }
 
     @Override
-    protected HttpMapper initHttpMapper(ServletConfig config) throws ServletException {
-	HttpMapper httpMapper;
-	String beanName = config.getInitParameter(HTTP_MAPPER_ATTRIBUTE);
-	if (beanName == null) {
-	    httpMapper = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(HttpMapper.class);
-	} else {
-	    httpMapper = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(beanName, HttpMapper.class);
-	}
-	return httpMapper;
+    protected Serializer initSerializer(final ServletConfig config) throws ServletException {
+        Serializer serializer;
+        String beanName = config.getInitParameter(SERIALIZER_ATTRIBUTE);
+        if (beanName == null) {
+            serializer = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(Serializer.class);
+        } else {
+            serializer = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(beanName, Serializer.class);
+        }
+        return serializer;
     }
 
 }

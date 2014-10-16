@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.command4spring.dispatcher.Dispatcher;
-import org.command4spring.remote.http.dispatcher.HttpDispatcher;
-import org.command4spring.remote.http.mapper.RestHttpMapper;
+import org.command4spring.remote.http.dispatcher.RestHttpDispatcher;
 import org.command4spring.sample.common.command.SleepCommand;
 import org.command4spring.xml.serializer.XmlSerializer;
 
@@ -29,7 +28,7 @@ public class SleepServlet extends HttpServlet {
      * Default constructor. 
      */
     public SleepServlet() {
-	this.httpDispatcher=new HttpDispatcher(new RestHttpMapper(new XmlSerializer()), "http://localhost:8080/command4spring-sample-service/execute");
+        this.httpDispatcher=new RestHttpDispatcher("http://localhost:8080/command4spring-sample-service/execute",new XmlSerializer());
     }
 
     /**

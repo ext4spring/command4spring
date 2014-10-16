@@ -9,14 +9,14 @@ import org.command4spring.command.Command;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.remote.exception.RemoteDispatchException;
 import org.command4spring.result.Result;
-
+@Deprecated
 public interface HttpMapper {
     /**
      * Create HTTP request from the {@link Command}
-      * @throws DispatchException
+     * @throws DispatchException
      */
     HttpRequestBase createRequest(final Command<? extends Result> command, String targetUrl) throws DispatchException;
-    
+
     /**
      * Parse HTTP response into {@link Result}
      * @throws DispatchException
@@ -30,14 +30,14 @@ public interface HttpMapper {
      * @throws RemoteDispatchException
      */
     Command<? extends Result> parseRequest(final HttpServletRequest httpRequest) throws DispatchException;
-    
+
     /**
      * 
      * @param httpResponse
      * @throws DispatchException
      */
     void writeResponse(Result result, HttpServletResponse httpResponse) throws DispatchException;
-    
+
     public void writeError(Throwable throwable, HttpServletResponse httpResponse);
-    
+
 }

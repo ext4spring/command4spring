@@ -1,5 +1,5 @@
 FEATURES
--auto register actions for commands
+-auto register actions for commands with spring
 -dispatch commands to actions
 -filter commands and results
 -schedule commands
@@ -15,31 +15,31 @@ DONE:
 Remove Spring dependency and only add it as new module(s)
 -InVmDispatcher
 	-Configurable executor. Prepare also to ForkJoinPool
-
-TODO:
--SpringInVmDispatcher (autowired, transactional, async)
-
-Dispatcher implementations:
+-SpringInVmDispatcher (autowired, transactional)
 -Rest HTTP dispatcher
-	-Annotations (jaxrs) could be used on commands to modify url and http method
-	-URL should reflect to command and should contain resource ID for caching
-		Example: 
-			class GetDataCommand
-				int dataId
-			GET /rest/data/{dataId}
-	-Cache headers
+	-Servlet 3 async
+	-URL is command specific
+		-@Path annotation (jaxrs) is used on commands to modify url
 -Jms dispatcher
 	-Implement as remote dispatcher and receiver
 	-configurable message format
--SpringJmsDispatcher (jmstemplate)
+
+TODO:
+Timeout support
+	-All dispatchers should have timeout. Remotes delegates timeouts to the endpoint and protocoll specific timeout are used like Jms ttl.
+Cache support
+	-Implement as a DispatcherFilter
+	-Remote uses headers
+	-Local cache? No headers
 -Load balancer dispatcher (uses an LB strategy to delegate to dispatcher instances)
 
-Filters
-	-Caching (how to use http cache header? or jms attributes. maybe result should have a header attribute which could travel in a protocol specific place)
+Other Filters
 	-Retry with retry policy
 	-Circuit breaker
 	-Logging
 	-Monitoring (Command/Result logging, action execution time, jmx support)
+
+Unit and system test coverage
 
 V1.1
 

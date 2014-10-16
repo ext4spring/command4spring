@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.command4spring.dispatcher.Dispatcher;
-import org.command4spring.remote.http.dispatcher.HttpDispatcher;
-import org.command4spring.remote.http.mapper.RestHttpMapper;
+import org.command4spring.remote.http.dispatcher.RestHttpDispatcher;
 import org.command4spring.result.ResultFuture;
 import org.command4spring.result.StringResult;
 import org.command4spring.sample.common.command.GetTimeCommand;
@@ -31,8 +30,7 @@ public class GetTimeServlet extends HttpServlet {
      * Default constructor.
      */
     public GetTimeServlet() {
-//	this.httpDispatcher = new HttpDispatcherOLD(new XmlSerializer(), "http://localhost:8080/command4spring-sample-service/execute");
-	this.httpDispatcher=new HttpDispatcher(new RestHttpMapper(new XmlSerializer()), "http://localhost:8080/command4spring-sample-service/execute");
+        this.httpDispatcher=new RestHttpDispatcher("http://localhost:8080/command4spring-sample-service/execute",new XmlSerializer());
     }
 
     /**
@@ -41,22 +39,22 @@ public class GetTimeServlet extends HttpServlet {
      */
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
-	try {
-	    if (request.getParameter("direct") != null) {
-		String time = "" + System.currentTimeMillis();
-		response.getWriter().write(time);
-	    } else {
-		LOGGER.debug("Incoming request");
-		GetTimeCommand getTimeCommand = new GetTimeCommand();
-		ResultFuture<StringResult> getTimeResult = this.httpDispatcher.dispatch(getTimeCommand);
-		LOGGER.debug("Command sent, waiting for response");
-		String time = getTimeResult.getResult().getValue();
-		LOGGER.debug("Result:" + time);
-		response.getWriter().write(time);
-	    }
-	} catch (Throwable e) {
-	    throw new ServletException(e);
-	}
+        try {
+            if (request.getParameter("direct") != null) {
+                String time = "" + System.currentTimeMillis();
+                response.getWriter().write(time);
+            } else {
+                LOGGER.debug("Incoming request");
+                GetTimeCommand getTimeCommand = new GetTimeCommand();
+                ResultFuture<StringResult> getTimeResult = this.httpDispatcher.dispatch(getTimeCommand);
+                LOGGER.debug("Command sent, waiting for response");
+                String time = getTimeResult.getResult().getValue();
+                LOGGER.debug("Result:" + time);
+                response.getWriter().write(time);
+            }
+        } catch (Throwable e) {
+            throw new ServletException(e);
+        }
     }
 
 }
