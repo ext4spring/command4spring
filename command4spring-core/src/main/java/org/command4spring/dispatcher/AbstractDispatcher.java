@@ -20,20 +20,18 @@ import org.command4spring.result.ResultFuture;
  */
 public abstract class AbstractDispatcher implements Dispatcher {
 
+    private static final long DEFAULT_TIMEOUT = 30000;
     private static final Log LOGGER = LogFactory.getLog(AbstractDispatcher.class);
 
-    private final ExecutorService executorService;
+    private ExecutorService executorService;
     private final DispatcherCallback defaultCallback = new NopDispatcherCallback();
     private List<CommandFilter> commandFilters = new LinkedList<CommandFilter>();
     private List<ResultFilter> resultFilters = new LinkedList<ResultFilter>();
+    private long timeout;
 
     public AbstractDispatcher() {
         this.executorService = new ForkJoinPool();
-    }
-
-    public AbstractDispatcher(final ExecutorService executorService) {
-        super();
-        this.executorService = executorService;
+        this.timeout = DEFAULT_TIMEOUT;
     }
 
     private class NopDispatcherCallback implements DispatcherCallback {
@@ -65,7 +63,7 @@ public abstract class AbstractDispatcher implements Dispatcher {
                 return AbstractDispatcher.this.executeCommonWorkflow(command, callback);
             }
         });
-        return new ResultFuture<R>(future);
+        return new ResultFuture<R>(future, this.timeout);
     }
 
     protected <C extends Command<R>, R extends Result> R executeCommonWorkflow(final C command, final DispatcherCallback callback) throws DispatchException {
@@ -124,4 +122,12 @@ public abstract class AbstractDispatcher implements Dispatcher {
      */
     protected abstract <C extends Command<R>, R extends Result> R execute(final C command) throws DispatchException;
 
+    public void setExecutorService(ExecutorService executorService) {
+	this.executorService = executorService;
+    }
+    
+    public void setTimeout(long timeout) {
+	this.timeout = timeout;
+    }
+    
 }

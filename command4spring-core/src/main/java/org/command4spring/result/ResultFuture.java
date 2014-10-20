@@ -19,13 +19,14 @@ import org.command4spring.exception.DispatchException;
 public class ResultFuture<T extends Result> implements Future<T> {
 
     private static final int MAX_STACKTRACE_LEVEL = 10;
-    //TODO: A configurable max timeout would be fine
-    private static final int MAX_TIMEOUT_IN_SECONDS = 300;
-
+    private final long startTime;
+    private final long timeout;
     private final Future<T> wrappedFuture;
 
-    public ResultFuture(final Future<T> wrappedFuture) {
+    public ResultFuture(final Future<T> wrappedFuture, long timeout) {
         this.wrappedFuture = wrappedFuture;
+        this.timeout=timeout;
+        this.startTime=System.currentTimeMillis();
     }
 
     @Override
@@ -50,12 +51,18 @@ public class ResultFuture<T extends Result> implements Future<T> {
      */
     public T get() throws InterruptedException, ExecutionException {
         try {
-            return this.wrappedFuture.get(MAX_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
+            return this.wrappedFuture.get(timeout, TimeUnit.MILLISECONDS);
         } catch (TimeoutException e) {
             throw new ExecutionException(e);
         }
     }
 
+    private void killOnTimeout() {
+	if (!this.wrappedFuture.isCancelled() && this.wrappedFuture.isCancelled() && System.currentTimeMillis()>startTime+timeout) {
+	    this.wrappedFuture.cancel(true);
+	}
+    }
+    
     @Override
     @Deprecated
     /**
@@ -66,7 +73,7 @@ public class ResultFuture<T extends Result> implements Future<T> {
     }
 
     public T getResult() throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
-        return this.getResult(MAX_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
+        return this.getResult(timeout, TimeUnit.MILLISECONDS);
     }
 
     private DispatchException findDispatchException(final Throwable throwable, int level) {
@@ -93,6 +100,8 @@ public class ResultFuture<T extends Result> implements Future<T> {
             throw new AsyncErrorException("Execution error:" + e, e);
         } catch (TimeoutException e) {
             throw new AsyncTimeoutException("Execution timed out:" + e, e);
+        } finally {
+            killOnTimeout();
         }
     }
 

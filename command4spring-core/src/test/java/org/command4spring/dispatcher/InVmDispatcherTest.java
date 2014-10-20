@@ -46,12 +46,11 @@ public class InVmDispatcherTest {
         int count=10000000;
         time=this.measureSpeed(executorService,count);
         System.out.println("throughput/sec:"+(count/(time*1f/1000)));
-
-
     }
 
     private long measureSpeed(final ExecutorService executorService, final int count) throws DispatchException, InterruptedException{
-        final InVmDispatcher dispatcher = new InVmDispatcher(executorService);
+        final InVmDispatcher dispatcher = new InVmDispatcher();
+        dispatcher.setExecutorService(executorService);
         List<Action<? extends Command<? extends Result>, ? extends Result>> actions = new ArrayList<>();
         actions.add(new SampleAction());
         dispatcher.setActions(actions);

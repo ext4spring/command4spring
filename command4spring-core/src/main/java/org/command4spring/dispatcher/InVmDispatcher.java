@@ -3,7 +3,6 @@ package org.command4spring.dispatcher;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,10 +23,6 @@ public class InVmDispatcher extends AbstractDispatcher implements Dispatcher {
 
     public InVmDispatcher() {
         super();
-    }
-
-    public InVmDispatcher(final ExecutorService executorService) {
-        super(executorService);
     }
 
     @Override
