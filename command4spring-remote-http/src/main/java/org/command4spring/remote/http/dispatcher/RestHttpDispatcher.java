@@ -105,7 +105,7 @@ public class RestHttpDispatcher extends AbstractRemoteDispatcher implements Remo
         String responseBody;
         try {
             responseBody = EntityUtils.toString(entity);
-            ResultMessage resultMessage=new ResultMessage(responseBody, commandMessage.getResultType());
+            ResultMessage resultMessage=new ResultMessage(responseBody);
             return resultMessage;
         } catch (ParseException | IOException e) {
             throw new RemoteDispatchException("Error reading HTTP response. HTTP status:" + status + "." + e, e);

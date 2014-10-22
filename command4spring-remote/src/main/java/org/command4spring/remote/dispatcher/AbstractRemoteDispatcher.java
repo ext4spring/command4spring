@@ -13,6 +13,7 @@ import org.command4spring.remote.model.ResultMessage;
 import org.command4spring.result.NoResult;
 import org.command4spring.result.Result;
 import org.command4spring.serializer.Serializer;
+import org.command4spring.util.CommandUtil;
 
 /**
  * Remote HTTP implementation of the {@link Dispatcher}
@@ -28,6 +29,7 @@ public abstract class AbstractRemoteDispatcher extends AbstractDispatcher implem
         this.serializer = serializer;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected <C extends Command<R>, R extends Result> R execute(final C command) throws DispatchException {
         CommandMessage commandMessage = this.createCommandMessage(command);
@@ -35,7 +37,7 @@ public abstract class AbstractRemoteDispatcher extends AbstractDispatcher implem
         if (resultMessage.getHeader(ResultMessage.RESULT_EXCEPTION_CLASS) != null) {
             throw ExceptionUtil.instantiateDispatchException(resultMessage.getHeader(ResultMessage.RESULT_EXCEPTION_CLASS), resultMessage.getTextResult());
         }
-        if (commandMessage.isNoResultCommand()) {
+        if (CommandUtil.isNoResultCommand(command)) {
             return (R) new NoResult(command.getCommandId());
         }
         R result = (R) this.serializer.toResult(resultMessage.getTextResult());

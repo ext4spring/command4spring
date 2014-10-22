@@ -13,9 +13,12 @@ import org.command4spring.command.Command;
 import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.exception.CommandSerializationException;
 import org.command4spring.exception.DispatchException;
-import org.command4spring.remote.jms.dispatch.JmsHeader;
 import org.command4spring.remote.jms.dispatch.JmsTemplate;
 import org.command4spring.remote.jms.dispatch.MessageCreator;
+import org.command4spring.remote.model.CommandMessage;
+import org.command4spring.remote.model.ResultMessage;
+import org.command4spring.remote.receiver.CommandReceiver;
+import org.command4spring.remote.receiver.DefaultCommandReceiver;
 import org.command4spring.result.NoResult;
 import org.command4spring.result.Result;
 import org.command4spring.serializer.Serializer;
@@ -28,18 +31,24 @@ import org.command4spring.serializer.Serializer;
 public class JmsCommandReceiverListener implements MessageListener {
     private static final Logger LOGGER = Logger.getLogger(JmsCommandReceiverListener.class);
 
-    private final Dispatcher dispatcher;
-    private final Serializer serializer;
+    private final CommandReceiver commandReceiver;
     private final JmsTemplate resultJmsTemplate;
 
     private long timeout = 5000;
 
     public JmsCommandReceiverListener(final Dispatcher dispatcher, final Serializer serializer, final JmsTemplate resultJmsTemplate) {
         super();
-        this.dispatcher = dispatcher;
-        this.serializer = serializer;
+        this.commandReceiver=new DefaultCommandReceiver(serializer, dispatcher);
         this.resultJmsTemplate = resultJmsTemplate;
     }
+
+    public JmsCommandReceiverListener(final CommandReceiver commandReceiver, final JmsTemplate resultJmsTemplate) {
+        super();
+        this.commandReceiver = commandReceiver;
+        this.resultJmsTemplate = resultJmsTemplate;
+    }
+
+
 
     @Override
     public void onMessage(final Message message) {
@@ -73,11 +82,11 @@ public class JmsCommandReceiverListener implements MessageListener {
                     msg.setJMSTimestamp(System.currentTimeMillis());
                     if (command != null) {
                         msg.setJMSCorrelationID(command.getCommandId());
-                        msg.setStringProperty(JmsHeader.COMMAND_CLASS_HEADER, command.getClass().getName());
-                        msg.setStringProperty(JmsHeader.COMMAND_ID_HEADER, command.getCommandId());
+                        msg.setStringProperty(CommandMessage.COMMAND_CLASS_HEADER, command.getClass().getName());
+                        msg.setStringProperty(CommandMessage.COMMAND_ID_HEADER, command.getCommandId());
                     }
                     msg.setJMSExpiration(JmsCommandReceiverListener.this.timeout);
-                    msg.setStringProperty(JmsHeader.RESULT_EXCEPTION_CLASS, t.getClass().getName());
+                    msg.setStringProperty(ResultMessage.RESULT_EXCEPTION_CLASS, t.getClass().getName());
                     msg.setText(t.getMessage());
                     return msg;
                 }
@@ -98,9 +107,8 @@ public class JmsCommandReceiverListener implements MessageListener {
                 msg.setJMSTimestamp(System.currentTimeMillis());
                 msg.setJMSCorrelationID(result.getCommandId());
                 msg.setJMSExpiration(JmsCommandReceiverListener.this.timeout);
-                msg.setStringProperty(JmsHeader.COMMAND_CLASS_HEADER, result.getClass().getName());
-                msg.setStringProperty(JmsHeader.COMMAND_ID_HEADER, result.getCommandId());
-                msg.setStringProperty(JmsHeader.RESULT_CLASS, result.getClass().getName());
+                msg.setStringProperty(CommandMessage.COMMAND_CLASS_HEADER, result.getClass().getName());
+                msg.setStringProperty(CommandMessage.COMMAND_ID_HEADER, result.getCommandId());
                 return msg;
             }
         });

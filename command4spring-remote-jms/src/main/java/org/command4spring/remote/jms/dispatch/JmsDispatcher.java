@@ -52,13 +52,13 @@ public class JmsDispatcher extends AbstractRemoteDispatcher {
             });
             if (commandMessage.isNoResultCommand()) {
                 LOGGER.debug("Command sent through JMS. Command ID:" + command.getCommandId() + ". Doesn't wait for result");
-                return new ResultMessage(null, commandMessage.getResultType());
+                return new ResultMessage("");
             } else {
                 LOGGER.debug("Command sent through JMS. Waiting for result. Command ID:" + command.getCommandId());
                 TextMessage jmsResultMessage = this.resultJmsTemplate.receive("JMSCorrelationID='" + command.getCommandId() + "'", TextMessage.class, this.timeout);
                 LOGGER.debug("Result received. Command ID:" + command.getCommandId());
                 String textResult = jmsResultMessage.getText();
-                ResultMessage resultMessage = new ResultMessage(textResult, commandMessage.getResultType());
+                ResultMessage resultMessage = new ResultMessage(textResult);
                 Enumeration<String> propertyNames = jmsResultMessage.getPropertyNames();
                 while (propertyNames.hasMoreElements()) {
                     String headerName = propertyNames.nextElement();

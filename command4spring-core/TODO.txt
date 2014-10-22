@@ -27,21 +27,41 @@ Remove Spring dependency and only add it as new module(s)
 TODO:
 Timeout support
 	-All dispatchers should have timeout. Remotes delegates timeouts to the endpoint and protocoll specific timeout are used like Jms ttl.
+	-The executor thread should be recycled on timeout, to prevent hanging threads.
 Cache support
 	-Implement as a DispatcherFilter
 	-Remote uses headers
 	-Local cache? No headers
+	-Cache invalidation support. (invalidation header. cache always comes with key)
 -Load balancer dispatcher (uses an LB strategy to delegate to dispatcher instances)
 
 Other Filters
 	-Retry with retry policy
 	-Circuit breaker
+	-Default result in case of error
 	-Logging
 	-Monitoring (Command/Result logging, action execution time, jmx support)
 
 Unit and system test coverage
 
 V1.1
+Filters
+	-DoS protection
+	-Priority? (The queue for executor could be a priority queue)
+	-Chunk streams?
+
+Dynamic scaling. 
+	-Start of an instance automatically get load
+	-Stop of an instance is handled by LB (retry should go to another node)
+	-Service registry. Lb uses registry.
+
+v1.2
+Spring security integration
+	Run as 
+	Run as async (support for current user and other user too)
+	RolesAllowed
+
+V?.?
 
 Action chaining concept. Should we allow this? A result of an action could be a CommandResult which contains the new command or we could use converters like in Camel.
 
@@ -60,10 +80,6 @@ Camel integration
 	-Result could go to body or to header or just drop
 	-Converter to make command from other types
 
-Spring security integration
-	Run as 
-	Run as async (support for current user and other user too)
-	RolesAllowed
 
 Bulk dispatcher
 
