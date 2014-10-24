@@ -1,6 +1,6 @@
 package org.command4spring.remote.jms.receiver;
 
-import java.util.concurrent.TimeUnit;
+import java.util.Enumeration;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -9,22 +9,17 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.apache.log4j.Logger;
-import org.command4spring.command.Command;
-import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.exception.CommandSerializationException;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.remote.jms.dispatch.JmsTemplate;
 import org.command4spring.remote.jms.dispatch.MessageCreator;
-import org.command4spring.remote.model.CommandMessage;
-import org.command4spring.remote.model.ResultMessage;
+import org.command4spring.remote.model.TextDispatcherCommand;
+import org.command4spring.remote.model.TextDispatcherResult;
 import org.command4spring.remote.receiver.CommandReceiver;
-import org.command4spring.remote.receiver.DefaultCommandReceiver;
-import org.command4spring.result.NoResult;
-import org.command4spring.result.Result;
-import org.command4spring.serializer.Serializer;
 
 /**
- * Configure this as a message listener for the queue where you send commands with {@link JmsDispatcherService}
+ * Configure this as a message listener for the queue where you send commands
+ * with {@link JmsDispatcherService}
  * 
  * @author borbasp
  */
@@ -36,89 +31,74 @@ public class JmsCommandReceiverListener implements MessageListener {
 
     private long timeout = 5000;
 
-    public JmsCommandReceiverListener(final Dispatcher dispatcher, final Serializer serializer, final JmsTemplate resultJmsTemplate) {
-        super();
-        this.commandReceiver=new DefaultCommandReceiver(serializer, dispatcher);
-        this.resultJmsTemplate = resultJmsTemplate;
-    }
-
     public JmsCommandReceiverListener(final CommandReceiver commandReceiver, final JmsTemplate resultJmsTemplate) {
-        super();
-        this.commandReceiver = commandReceiver;
-        this.resultJmsTemplate = resultJmsTemplate;
+	super();
+	this.commandReceiver = commandReceiver;
+	this.resultJmsTemplate = resultJmsTemplate;
     }
-
-
 
     @Override
     public void onMessage(final Message message) {
-        if (message instanceof TextMessage) {
-            TextMessage textMessage = (TextMessage) message;
-            Command<? extends Result> command = null;
-            try {
-                String textCommand = textMessage.getText();
-                command = this.serializer.toCommand(textCommand);
-                Result result = this.dispatcher.dispatch(command).getResult(this.timeout, TimeUnit.MILLISECONDS);
-                if (result instanceof NoResult) {
-                    LOGGER.debug("Message processed, client needs no result message since type is NoResult.");
-                } else {
-                    this.sendResult(result);
-                }
-            } catch (Throwable e) {
-                this.sendError(command, e);
-            }
-        } else {
-            this.sendError(null, new DispatchException("Only text message is supported"));
-        }
+	try {
+	    TextDispatcherCommand commandMessage = this.parseReceivedMessage(message);
+	    TextDispatcherResult resultMessage;
+	    resultMessage = commandReceiver.execute(commandMessage);
+	    if (resultMessage.getTextResult() == null) {
+		LOGGER.debug("Message processed, empty result, no need for response message");
+	    } else {
+		this.sendResult(resultMessage);
+	    }
+	} catch (DispatchException | JMSException e) {
+	    LOGGER.error("Error while dispatchig message received through JMS: " + e, e);
+	}
     }
 
-    private void sendError(final Command<? extends Result> command, final Throwable t) {
-        LOGGER.error("Error while dispatching command:" + t, t);
-        try {
-            this.resultJmsTemplate.send(new MessageCreator() {
-                @Override
-                public Message createMessage(final Session session) throws JMSException {
-                    TextMessage msg = session.createTextMessage();
-                    msg.setJMSTimestamp(System.currentTimeMillis());
-                    if (command != null) {
-                        msg.setJMSCorrelationID(command.getCommandId());
-                        msg.setStringProperty(CommandMessage.COMMAND_CLASS_HEADER, command.getClass().getName());
-                        msg.setStringProperty(CommandMessage.COMMAND_ID_HEADER, command.getCommandId());
-                    }
-                    msg.setJMSExpiration(JmsCommandReceiverListener.this.timeout);
-                    msg.setStringProperty(ResultMessage.RESULT_EXCEPTION_CLASS, t.getClass().getName());
-                    msg.setText(t.getMessage());
-                    return msg;
-                }
-            });
-        } catch (JMSException e) {
-            LOGGER.error("Error while sending error response:" + e, e);
-        }
+    @SuppressWarnings("unchecked")
+    private TextDispatcherCommand parseReceivedMessage(Message message) throws DispatchException {
+	if (message instanceof TextMessage) {
+	    try {
+		TextMessage textMessage = (TextMessage) message;
+		String textCommand = textMessage.getText();
+		TextDispatcherCommand commandMessage = new TextDispatcherCommand(textCommand);
+		Enumeration<String> propertyNames = textMessage.getPropertyNames();
+		String headerName;
+		while (propertyNames.hasMoreElements()) {
+		    headerName = propertyNames.nextElement();
+		    commandMessage.setHeader(headerName, textMessage.getStringProperty(headerName));
+		}
+		return commandMessage;
+	    } catch (JMSException e) {
+		throw new DispatchException("Error while parsing JMS message:" + e, e);
+	    }
+	} else {
+	    throw new DispatchException("Invalid message type. Only TextMessage is supported");
+	}
+
     }
 
-    private void sendResult(final Result result) throws JMSException, CommandSerializationException {
-        LOGGER.debug("Command dispatched. Sending to result queue. Result: " + result);
-        final String textResult = this.serializer.toText(result);
-        this.resultJmsTemplate.send(new MessageCreator() {
-            @Override
-            public Message createMessage(final Session session) throws JMSException {
-                TextMessage msg = session.createTextMessage();
-                msg.setText(textResult);
-                msg.setJMSTimestamp(System.currentTimeMillis());
-                msg.setJMSCorrelationID(result.getCommandId());
-                msg.setJMSExpiration(JmsCommandReceiverListener.this.timeout);
-                msg.setStringProperty(CommandMessage.COMMAND_CLASS_HEADER, result.getClass().getName());
-                msg.setStringProperty(CommandMessage.COMMAND_ID_HEADER, result.getCommandId());
-                return msg;
-            }
-        });
+    private void sendResult(final TextDispatcherResult resultMessage) throws JMSException, CommandSerializationException {
+	LOGGER.debug("Command dispatched. Sending to result queue.");
+	this.resultJmsTemplate.send(new MessageCreator() {
+	    @Override
+	    public Message createMessage(final Session session) throws JMSException {
+		TextMessage msg = session.createTextMessage();
+		msg.setText(resultMessage.getTextResult());
+		msg.setJMSTimestamp(System.currentTimeMillis());
+		msg.setJMSCorrelationID(resultMessage.getCommandId());
+		msg.setJMSExpiration(JmsCommandReceiverListener.this.timeout);
+		for (String headerName : resultMessage.getHeaders().keySet()) {
+		    msg.setStringProperty(headerName, resultMessage.getHeader(headerName));
+		}
+		return msg;
+	    }
+	});
     }
 
     public void setTimeout(final long timeout) {
-        this.timeout = timeout;
+	this.timeout = timeout;
     }
 
     public long getTimeout() {
-        return this.timeout;
+	return this.timeout;
     }
 }

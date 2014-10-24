@@ -5,6 +5,10 @@ import java.util.List;
 
 import org.command4spring.command.AbstractCommand;
 import org.command4spring.command.Command;
+import org.command4spring.dispatcher.filter.CommandFilter;
+import org.command4spring.dispatcher.filter.CommandFilterChain;
+import org.command4spring.dispatcher.filter.ResultFilter;
+import org.command4spring.dispatcher.filter.ResultFilterChain;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.result.AbstractResult;
 import org.command4spring.result.Result;
@@ -26,23 +30,26 @@ public class AbstractDispatcherTest {
     }
 
     private class CommandFilter1 implements CommandFilter {
-        @Override
-        public <C extends Command<R>, R extends Result> C filter(final C command, final CommandFilterChain filterChain) throws DispatchException {
-            if (command instanceof TestCommand) {
-                ((TestCommand) command).append("1");
+	@Override
+	public DispatchCommand filter(DispatchCommand dispatchCommand, CommandFilterChain filterChain) throws DispatchException {
+            Assert.assertEquals(dispatchCommand.getCommand().getCommandId(), dispatchCommand.getHeader(Dispatcher.HEADER_COMMAND_ID));
+            Assert.assertEquals(dispatchCommand.getCommand().getClass().getName(), dispatchCommand.getHeader(Dispatcher.HEADER_COMMAND_CLASS));
+	    if (dispatchCommand.getCommand() instanceof TestCommand) {
+                ((TestCommand) dispatchCommand.getCommand()).append("1");
             }
-            return filterChain.filter(command);
-        }
+            return filterChain.filter(dispatchCommand);
+	}
+	
     }
 
     private class CommandFilter2 implements CommandFilter {
-        @Override
-        public <C extends Command<R>, R extends Result> C filter(final C command, final CommandFilterChain filterChain) throws DispatchException {
-            if (command instanceof TestCommand) {
-                ((TestCommand) command).append("2");
+	@Override
+	public DispatchCommand filter(DispatchCommand dispatchCommand, CommandFilterChain filterChain) throws DispatchException {
+            if (dispatchCommand.getCommand() instanceof TestCommand) {
+                ((TestCommand) dispatchCommand.getCommand()).append("2");
             }
-            return filterChain.filter(command);
-        }
+            return filterChain.filter(dispatchCommand);
+	}
     }
 
     private class TestResult extends AbstractResult {
@@ -58,33 +65,32 @@ public class AbstractDispatcherTest {
     }
 
     private class ResultFilter1 implements ResultFilter {
-        @Override
-        public <R extends Result> R filter(final R result, final ResultFilterChain filterChain) throws DispatchException {
-            if (result instanceof TestResult) {
-                ((TestResult) result).append("1");
+	@Override
+	public DispatchResult filter(DispatchResult dispatchResult, ResultFilterChain filterChain) throws DispatchException {
+            if (dispatchResult.getResult() instanceof TestResult) {
+                ((TestResult) dispatchResult.getResult()).append("1");
             }
-            return filterChain.filter(result);
-        }
+            return filterChain.filter(dispatchResult);
+	}
     }
 
     private class ResultFilter2 implements ResultFilter {
-        @Override
-        public <R extends Result> R filter(final R result, final ResultFilterChain filterChain) throws DispatchException {
-            if (result instanceof TestResult) {
-                ((TestResult) result).append("2");
+	@Override
+	public DispatchResult filter(DispatchResult dispatchResult, ResultFilterChain filterChain) throws DispatchException {
+            if (dispatchResult.getResult() instanceof TestResult) {
+                ((TestResult) dispatchResult.getResult()).append("2");
             }
-            return filterChain.filter(result);
-        }
+            return filterChain.filter(dispatchResult);
+	}
     }
 
     private class TestDispatcher extends AbstractDispatcher {
-
-        @Override
-        protected <C extends Command<R>, R extends Result> R execute(final C command) throws DispatchException {
+	@Override
+	protected DispatchResult execute(DispatchCommand dispatchCommand) throws DispatchException {
             TestResult result=new TestResult();
-            result.append(((TestCommand)command).getData()+"result");
-            return (R)result;
-        }
+            result.append(((TestCommand)dispatchCommand.getCommand()).getData()+"result");
+            return new DispatchResult(result);
+	}
     }
 
     @Test

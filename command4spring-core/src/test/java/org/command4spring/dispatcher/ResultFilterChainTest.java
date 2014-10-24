@@ -3,9 +3,11 @@ package org.command4spring.dispatcher;
 import java.util.Arrays;
 import java.util.List;
 
+import org.command4spring.dispatcher.filter.DefaultResultFilterChain;
+import org.command4spring.dispatcher.filter.ResultFilter;
+import org.command4spring.dispatcher.filter.ResultFilterChain;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.result.AbstractResult;
-import org.command4spring.result.Result;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,33 +25,35 @@ public class ResultFilterChainTest {
         }
     }
 
-    private class Filter1 implements ResultFilter {
-        @Override
-        public <R extends Result> R filter(final R result, final ResultFilterChain filterChain) throws DispatchException {
-            if (result instanceof TestResult) {
-                ((TestResult) result).append("1");
+    private class ResultFilter1 implements ResultFilter {
+	@Override
+	public DispatchResult filter(DispatchResult dispatchResult, ResultFilterChain filterChain) throws DispatchException {
+            if (dispatchResult.getResult() instanceof TestResult) {
+                dispatchResult.getResult(TestResult.class).append("1");
             }
-            return filterChain.filter(result);
-        }
+            return filterChain.filter(dispatchResult);
+	}
     }
 
-    private class Filter2 implements ResultFilter {
-        @Override
-        public <R extends Result> R filter(final R result, final ResultFilterChain filterChain) throws DispatchException {
-            if (result instanceof TestResult) {
-                ((TestResult) result).append("2");
+    private class ResultFilter2 implements ResultFilter {
+	@Override
+	public DispatchResult filter(DispatchResult dispatchResult, ResultFilterChain filterChain) throws DispatchException {
+            if (dispatchResult.getResult() instanceof TestResult) {
+                dispatchResult.getResult(TestResult.class).append("2");
             }
-            return filterChain.filter(result);
-        }
+            return filterChain.filter(dispatchResult);
+	}
     }
+
 
     @Test
     public void filterChainCallsFiltersInSpecifiedOrder() throws DispatchException {
-        List<ResultFilter> filters = Arrays.asList(new ResultFilter[] { new Filter1(), new Filter2() });
+        List<ResultFilter> filters = Arrays.asList(new ResultFilter[] { new ResultFilter1(), new ResultFilter2() });
         DefaultResultFilterChain filterChain = new DefaultResultFilterChain(filters);
         TestResult result = new TestResult();
-        TestResult filteredResult = filterChain.filter(result);
-        Assert.assertEquals("12", filteredResult.getData());
+        DispatchResult dispatchResult=new DispatchResult(result);
+        DispatchResult filteredDispatchResult = filterChain.filter(dispatchResult);
+        Assert.assertEquals("12", filteredDispatchResult.getResult(TestResult.class).getData());
     }
 
 }

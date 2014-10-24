@@ -23,8 +23,8 @@ import org.command4spring.exception.DispatchException;
 import org.command4spring.remote.dispatcher.AbstractRemoteDispatcher;
 import org.command4spring.remote.dispatcher.RemoteDispatcher;
 import org.command4spring.remote.exception.RemoteDispatchException;
-import org.command4spring.remote.model.CommandMessage;
-import org.command4spring.remote.model.ResultMessage;
+import org.command4spring.remote.model.TextDispatcherCommand;
+import org.command4spring.remote.model.TextDispatcherResult;
 import org.command4spring.result.Result;
 import org.command4spring.serializer.Serializer;
 
@@ -49,9 +49,9 @@ public class RestHttpDispatcher extends AbstractRemoteDispatcher implements Remo
     }
 
     @Override
-    protected ResultMessage executeRemote(final CommandMessage commandMessage) throws DispatchException {
+    protected TextDispatcherResult executeRemote(final Command<? extends Result> command, final TextDispatcherCommand commandMessage) throws DispatchException {
         try {
-            HttpRequestBase httpRequest=this.createRequest(commandMessage);
+            HttpRequestBase httpRequest=this.createRequest(command, commandMessage);
             LOGGER.debug("Sending HTTP request to:"+httpRequest.getURI().toString()+" Method:"+httpRequest.getMethod());
             CloseableHttpResponse response = this.httpclient.execute(httpRequest);        
             return this.parseResponse(response, commandMessage);
@@ -60,9 +60,8 @@ public class RestHttpDispatcher extends AbstractRemoteDispatcher implements Remo
         }
     }
 
-    protected HttpRequestBase createRequest(final CommandMessage commandMessage) throws DispatchException {
+    protected HttpRequestBase createRequest(final Command<? extends Result> command, final TextDispatcherCommand commandMessage) throws DispatchException {
         HttpRequestBase request;
-        Command<? extends Result> command=commandMessage.getCommand();
         String requestPath = this.createHttpPath(command);
         try {
             request = new HttpPost(requestPath);
@@ -99,13 +98,13 @@ public class RestHttpDispatcher extends AbstractRemoteDispatcher implements Remo
         }
     }  
 
-    protected ResultMessage parseResponse(final CloseableHttpResponse httpResponse, final CommandMessage commandMessage) throws DispatchException {
+    protected TextDispatcherResult parseResponse(final CloseableHttpResponse httpResponse, final TextDispatcherCommand commandMessage) throws DispatchException {
         int status = httpResponse.getStatusLine().getStatusCode();
         HttpEntity entity = httpResponse.getEntity();
         String responseBody;
         try {
             responseBody = EntityUtils.toString(entity);
-            ResultMessage resultMessage=new ResultMessage(responseBody);
+            TextDispatcherResult resultMessage=new TextDispatcherResult(responseBody);
             return resultMessage;
         } catch (ParseException | IOException e) {
             throw new RemoteDispatchException("Error reading HTTP response. HTTP status:" + status + "." + e, e);

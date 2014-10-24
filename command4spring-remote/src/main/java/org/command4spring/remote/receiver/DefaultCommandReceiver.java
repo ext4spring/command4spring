@@ -8,11 +8,11 @@ import org.command4spring.command.Command;
 import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.exception.CommandSerializationException;
 import org.command4spring.exception.DispatchException;
-import org.command4spring.remote.model.CommandMessage;
-import org.command4spring.remote.model.ResultMessage;
+import org.command4spring.remote.dispatcher.RemoteDispatcher;
+import org.command4spring.remote.model.TextDispatcherCommand;
+import org.command4spring.remote.model.TextDispatcherResult;
 import org.command4spring.result.Result;
 import org.command4spring.serializer.Serializer;
-
 public class DefaultCommandReceiver implements CommandReceiver {
 
     private static Log LOGGER = LogFactory.getLog(DefaultCommandReceiver.class);
@@ -28,32 +28,27 @@ public class DefaultCommandReceiver implements CommandReceiver {
     }
 
     @Override
-    public ResultMessage execute(final CommandMessage commandMessage) throws DispatchException {
+    public TextDispatcherResult execute(final TextDispatcherCommand commandMessage) throws DispatchException {
         Command<? extends Result> command = null;
         try {
             command = this.serializer.toCommand(commandMessage.getTextCommand());
             Result result = this.dispatcher.dispatch(command).getResult(this.timeout, TimeUnit.MILLISECONDS);
             return this.createResultMessage(result);
         } catch (Throwable e) {
-            LOGGER.error("Error while dispatching command:" + e, e);
+            LOGGER.error("Error while dispatching command: " + e, e);
             return this.createErrorResultMessage(command, e);
         }
     }
 
-    protected ResultMessage createResultMessage(final Result result) throws CommandSerializationException {
-        ResultMessage resultMessage = new ResultMessage(this.serializer.toText(result));
-        resultMessage.setHeader(CommandMessage.COMMAND_CLASS_HEADER, result.getClass().getName());
-        resultMessage.setHeader(CommandMessage.COMMAND_ID_HEADER, result.getCommandId());
+    protected TextDispatcherResult createResultMessage(final Result result) throws CommandSerializationException {
+        TextDispatcherResult resultMessage = new TextDispatcherResult(result.getCommandId(), this.serializer.toText(result));
         return resultMessage;
     }
 
-    protected ResultMessage createErrorResultMessage(final Command<? extends Result> command, final Throwable t) {
-        ResultMessage resultMessage = new ResultMessage(t.getMessage());
-        if (command != null) {
-            resultMessage.setHeader(CommandMessage.COMMAND_CLASS_HEADER, command.getClass().getName());
-            resultMessage.setHeader(CommandMessage.COMMAND_ID_HEADER, command.getCommandId());
-        }
-        resultMessage.setHeader(ResultMessage.RESULT_EXCEPTION_CLASS, t.getClass().getName());
+    protected TextDispatcherResult createErrorResultMessage(final Command<? extends Result> command, final Throwable t) {
+	String commandId = (command == null) ? null : command.getCommandId();
+	TextDispatcherResult resultMessage = new TextDispatcherResult(commandId, t.getMessage());
+	resultMessage.setHeader(RemoteDispatcher.HEADER_RESULT_EXCEPTION_CLASS, t.getClass().getName());
         return resultMessage;
     }
 }

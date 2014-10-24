@@ -10,6 +10,9 @@ import org.command4spring.result.ResultFuture;
  * 
  */
 public interface Dispatcher {
+    public static final String HEADER_COMMAND_ID = "commandId";
+    public static final String HEADER_COMMAND_CLASS = "commandClass";
+    public static final String HEADER_RESULT_CLASS = "resultClass";
 
     /**
      * Finds the action for the specified command and executes it. Returns the

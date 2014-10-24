@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.command4spring.command.AbstractCommand;
 import org.command4spring.command.Command;
+import org.command4spring.dispatcher.filter.CommandFilter;
+import org.command4spring.dispatcher.filter.CommandFilterChain;
+import org.command4spring.dispatcher.filter.DefaultCommandFilterChain;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.result.LongResult;
 import org.command4spring.result.Result;
@@ -23,31 +26,34 @@ public class CommandFilterChainTest {
         }
     }
 
-    private class Filter1 implements CommandFilter{
-        @Override
-        public <C extends Command<R>, R extends Result> C filter(final C command, final CommandFilterChain filterChain) throws DispatchException {
-            if (command instanceof TestCommand) {
-                ((TestCommand)command).append("1");
+    private class CommandFilter1 implements CommandFilter {
+	@Override
+	public DispatchCommand filter(DispatchCommand dispatchCommand, CommandFilterChain filterChain) throws DispatchException {
+            if (dispatchCommand.getCommand() instanceof TestCommand) {
+                dispatchCommand.getCommand(TestCommand.class).append("1");
             }
-            return filterChain.filter(command);
-        }
+            return filterChain.filter(dispatchCommand);
+	}
+	
     }
-    private class Filter2 implements CommandFilter{
-        @Override
-        public <C extends Command<R>, R extends Result> C filter(final C command, final CommandFilterChain filterChain) throws DispatchException {
-            if (command instanceof TestCommand) {
-                ((TestCommand)command).append("2");
+
+    private class CommandFilter2 implements CommandFilter {
+	@Override
+	public DispatchCommand filter(DispatchCommand dispatchCommand, CommandFilterChain filterChain) throws DispatchException {
+            if (dispatchCommand.getCommand() instanceof TestCommand) {
+               dispatchCommand.getCommand(TestCommand.class).append("2");
             }
-            return filterChain.filter(command);
-        }
+            return filterChain.filter(dispatchCommand);
+	}
     }
 
     @Test
     public void filterChainCallsFiltersInSpecifiedOrder() throws DispatchException {
-        List<CommandFilter> filters=Arrays.asList(new CommandFilter[]{new Filter1(), new Filter2()});
+        List<CommandFilter> filters=Arrays.asList(new CommandFilter[]{new CommandFilter1(), new CommandFilter2()});
         DefaultCommandFilterChain filterChain=new DefaultCommandFilterChain(filters);
         TestCommand testCommand=new TestCommand();
-        TestCommand filteredCommand=filterChain.filter(testCommand);
+        DispatchCommand filteredDispatchCommand=filterChain.filter(new DispatchCommand(testCommand));
+        TestCommand filteredCommand=filteredDispatchCommand.getCommand(TestCommand.class);
         Assert.assertEquals("12", filteredCommand.getData());
     }
 

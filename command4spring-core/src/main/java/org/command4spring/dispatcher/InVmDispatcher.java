@@ -26,7 +26,13 @@ public class InVmDispatcher extends AbstractDispatcher implements Dispatcher {
     }
 
     @Override
-    public <C extends Command<R>, R extends Result> R execute(final C command) throws DispatchException {
+    protected DispatchResult execute(DispatchCommand dispatchCommand) throws DispatchException {
+	Result result=this.executeInVm(dispatchCommand.getCommand());
+	DispatchResult dispatchResult=new DispatchResult(result);
+	return dispatchResult;
+    }
+    
+    protected <C extends Command<R>, R extends Result> R executeInVm(final C command) throws DispatchException {
         return this.findAction(command).validate(command).execute(command);
     }
 

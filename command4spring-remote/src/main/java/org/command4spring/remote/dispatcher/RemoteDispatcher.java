@@ -7,5 +7,6 @@ import org.command4spring.dispatcher.Dispatcher;
  * 
  */
 public interface RemoteDispatcher extends Dispatcher {
+    public static final String HEADER_RESULT_EXCEPTION_CLASS="resultExceptionClass";
 
 }

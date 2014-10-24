@@ -24,10 +24,6 @@ public class SpringInVmDispatcher extends InVmDispatcher implements Dispatcher {
         super();
     }
 
-    public SpringInVmDispatcher(final ExecutorService executorService) {
-        super(executorService);
-    }
-
     @Override
     @Transactional
     public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(final C command) throws DispatchException {

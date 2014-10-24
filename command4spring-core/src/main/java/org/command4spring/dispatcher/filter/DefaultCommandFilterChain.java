@@ -1,11 +1,10 @@
-package org.command4spring.dispatcher;
+package org.command4spring.dispatcher.filter;
 
 import java.util.Iterator;
 import java.util.List;
 
-import org.command4spring.command.Command;
+import org.command4spring.dispatcher.DispatchCommand;
 import org.command4spring.exception.DispatchException;
-import org.command4spring.result.Result;
 
 public class DefaultCommandFilterChain implements CommandFilterChain {
 
@@ -16,11 +15,12 @@ public class DefaultCommandFilterChain implements CommandFilterChain {
     }
 
     @Override
-    public <C extends Command<R>, R extends Result> C filter(final C command) throws DispatchException {
+    public DispatchCommand filter(DispatchCommand dispatchCommand) throws DispatchException {
         if (this.filters.hasNext()) {
-            return this.filters.next().filter(command, this);
+            return this.filters.next().filter(dispatchCommand, this);
         }
-        return command;
+        return dispatchCommand;
     }
+    
 
 }

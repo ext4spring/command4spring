@@ -11,6 +11,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.command4spring.action.Action;
 import org.command4spring.command.Command;
+import org.command4spring.dispatcher.filter.CommandFilter;
+import org.command4spring.dispatcher.filter.CommandFilterChain;
+import org.command4spring.dispatcher.filter.DefaultCommandFilterChain;
+import org.command4spring.dispatcher.filter.DefaultResultFilterChain;
+import org.command4spring.dispatcher.filter.ResultFilter;
+import org.command4spring.dispatcher.filter.ResultFilterChain;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.result.Result;
 import org.command4spring.result.ResultFuture;
@@ -66,13 +72,19 @@ public abstract class AbstractDispatcher implements Dispatcher {
         return new ResultFuture<R>(future, this.timeout);
     }
 
+    @SuppressWarnings("unchecked")
     protected <C extends Command<R>, R extends Result> R executeCommonWorkflow(final C command, final DispatcherCallback callback) throws DispatchException {
         LOGGER.debug("Execting command:" + command);
         long start = System.currentTimeMillis();
         R result;
         try {
             callback.beforeDispatch(command);
-            result = this.filterResult(this.execute(this.filterCommand(command)));
+            DispatchCommand dispatchCommand=new DispatchCommand(command);
+            this.addDefaultHeaders(command, dispatchCommand);
+            DispatchResult dispatchResult=this.execute(this.filterCommand(dispatchCommand));
+            this.addDefaultHeaders(dispatchResult);
+            dispatchResult=this.filterResult(dispatchResult);   
+            result = (R) dispatchResult.getResult();
             result.setCommandId(command.getCommandId());
             callback.onSuccess(command, result);
             LOGGER.debug("Finished command:" + command + " (" + (System.currentTimeMillis() - start) + "msec)");
@@ -87,14 +99,24 @@ public abstract class AbstractDispatcher implements Dispatcher {
         return result;
     }
 
-    protected <C extends Command<R>, R extends Result> C filterCommand(final C command) throws DispatchException {
-        CommandFilterChain filterChain = new DefaultCommandFilterChain(this.commandFilters);
-        return filterChain.filter(command);
+    protected void addDefaultHeaders(Command<? extends Result> command, DispatchCommand dispatchCommand) {
+        dispatchCommand.setHeader(Dispatcher.HEADER_COMMAND_CLASS, command.getClass().getName());
+        dispatchCommand.setHeader(Dispatcher.HEADER_COMMAND_ID, command.getCommandId());
     }
 
-    protected <R extends Result> R filterResult(final R result) throws DispatchException {
+    protected void addDefaultHeaders(DispatchResult dispatchResult) {
+	dispatchResult.setHeader(Dispatcher.HEADER_RESULT_CLASS, dispatchResult.getResult().getClass().getName());
+	dispatchResult.setHeader(Dispatcher.HEADER_COMMAND_ID, dispatchResult.getResult().getCommandId());
+    }
+    
+    protected DispatchCommand filterCommand(final DispatchCommand dispatchCommand) throws DispatchException {
+        CommandFilterChain filterChain = new DefaultCommandFilterChain(this.commandFilters);
+        return filterChain.filter(dispatchCommand);
+    }
+
+    protected DispatchResult filterResult(final DispatchResult dispatchResult) throws DispatchException {
         ResultFilterChain filterChain = new DefaultResultFilterChain(this.resultFilters);
-        return filterChain.filter(result);
+        return filterChain.filter(dispatchResult);
     }
 
     public void setCommandFilters(final List<CommandFilter> commandFilters) {
@@ -120,7 +142,7 @@ public abstract class AbstractDispatcher implements Dispatcher {
      * @return
      * @throws DispatchException
      */
-    protected abstract <C extends Command<R>, R extends Result> R execute(final C command) throws DispatchException;
+    protected abstract DispatchResult execute(DispatchCommand dispatchCommand) throws DispatchException;
 
     public void setExecutorService(ExecutorService executorService) {
 	this.executorService = executorService;
