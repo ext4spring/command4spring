@@ -1,4 +1,4 @@
-package org.command4spring.dispatcher;
+package org.command4spring.dispatcher.callback;
 
 import org.command4spring.command.Command;
 import org.command4spring.exception.DispatchException;

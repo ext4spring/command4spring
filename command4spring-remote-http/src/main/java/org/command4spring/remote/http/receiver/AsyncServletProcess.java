@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
 import org.command4spring.command.Command;
 import org.command4spring.dispatcher.Dispatcher;
-import org.command4spring.dispatcher.DispatcherCallback;
+import org.command4spring.dispatcher.callback.DispatcherCallback;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.remote.http.dispatcher.HttpHeader;
 import org.command4spring.result.Result;

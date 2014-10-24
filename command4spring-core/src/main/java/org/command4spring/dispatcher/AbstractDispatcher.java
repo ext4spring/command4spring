@@ -9,14 +9,12 @@ import java.util.concurrent.Future;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.command4spring.action.Action;
 import org.command4spring.command.Command;
-import org.command4spring.dispatcher.filter.CommandFilter;
-import org.command4spring.dispatcher.filter.CommandFilterChain;
-import org.command4spring.dispatcher.filter.DefaultCommandFilterChain;
-import org.command4spring.dispatcher.filter.DefaultResultFilterChain;
-import org.command4spring.dispatcher.filter.ResultFilter;
-import org.command4spring.dispatcher.filter.ResultFilterChain;
+import org.command4spring.dispatcher.callback.DispatcherCallback;
+import org.command4spring.dispatcher.callback.NopDispatcherCallback;
+import org.command4spring.dispatcher.filter.DefaultDispatchFilterChain;
+import org.command4spring.dispatcher.filter.DispatchFilter;
+import org.command4spring.dispatcher.filter.Executor;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.result.Result;
 import org.command4spring.result.ResultFuture;
@@ -24,132 +22,107 @@ import org.command4spring.result.ResultFuture;
 /**
  * Common logic for all dispatcher implementations
  */
-public abstract class AbstractDispatcher implements Dispatcher {
+public abstract class AbstractDispatcher implements Dispatcher, ChainableDispatcher {
 
     private static final long DEFAULT_TIMEOUT = 30000;
     private static final Log LOGGER = LogFactory.getLog(AbstractDispatcher.class);
 
     private ExecutorService executorService;
     private final DispatcherCallback defaultCallback = new NopDispatcherCallback();
-    private List<CommandFilter> commandFilters = new LinkedList<CommandFilter>();
-    private List<ResultFilter> resultFilters = new LinkedList<ResultFilter>();
+    private final List<DispatchFilter> filters;
     private long timeout;
 
     public AbstractDispatcher() {
-        this.executorService = new ForkJoinPool();
-        this.timeout = DEFAULT_TIMEOUT;
+	this(new LinkedList<DispatchFilter>());
     }
 
-    private class NopDispatcherCallback implements DispatcherCallback {
-
-        @Override
-        public <C extends Command<R>, R extends Result> void beforeDispatch(final C command) throws DispatchException {
-        }
-
-        @Override
-        public <C extends Command<R>, R extends Result> void onError(final C command, final DispatchException e) throws DispatchException {
-        }
-
-        @Override
-        public <C extends Command<R>, R extends Result> void onSuccess(final C command, final R result) throws DispatchException {
-        }
-
+    public AbstractDispatcher(List<DispatchFilter> filters) {
+	super();
+	this.filters = new LinkedList<DispatchFilter>();
+	this.filters.addAll(filters);
+	this.executorService = new ForkJoinPool();
+	this.timeout = DEFAULT_TIMEOUT;
     }
+
+    /**
+     * The returned executor will be added to the end of the filter chain.
+     * 
+     * @return
+     */
+    protected abstract Executor getExecutor();
 
     @Override
     public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(final C command) throws DispatchException {
-        return this.dispatch(command, this.defaultCallback);
+	return this.dispatch(command, this.defaultCallback);
     }
 
     @Override
     public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(final C command, final DispatcherCallback callback) throws DispatchException {
-        Future<R> future = this.executorService.submit(new Callable<R>() {
-            @Override
-            public R call() throws Exception {
-                return AbstractDispatcher.this.executeCommonWorkflow(command, callback);
-            }
-        });
-        return new ResultFuture<R>(future, this.timeout);
+	Future<R> future = this.executorService.submit(new Callable<R>() {
+	    @Override
+	    public R call() throws Exception {
+		return AbstractDispatcher.this.executeCommonWorkflow(command, callback);
+	    }
+	});
+	return new ResultFuture<R>(future, this.timeout);
     }
 
     @SuppressWarnings("unchecked")
     protected <C extends Command<R>, R extends Result> R executeCommonWorkflow(final C command, final DispatcherCallback callback) throws DispatchException {
-        LOGGER.debug("Execting command:" + command);
-        long start = System.currentTimeMillis();
-        R result;
-        try {
-            callback.beforeDispatch(command);
-            DispatchCommand dispatchCommand=new DispatchCommand(command);
-            this.addDefaultHeaders(command, dispatchCommand);
-            DispatchResult dispatchResult=this.execute(this.filterCommand(dispatchCommand));
-            this.addDefaultHeaders(dispatchResult);
-            dispatchResult=this.filterResult(dispatchResult);   
-            result = (R) dispatchResult.getResult();
-            result.setCommandId(command.getCommandId());
-            callback.onSuccess(command, result);
-            LOGGER.debug("Finished command:" + command + " (" + (System.currentTimeMillis() - start) + "msec)");
-        } catch (DispatchException e) {
-            callback.onError(command, e);
-            throw e;
-        } catch (Throwable e) {
-            DispatchException dispatchException = new DispatchException("Unknown error while executing command:" + e, e);
-            callback.onError(command, dispatchException);
-            throw dispatchException;
-        }
-        return result;
+	LOGGER.debug("Execting command:" + command);
+	long start = System.currentTimeMillis();
+	R result;
+	try {
+	    callback.beforeDispatch(command);
+	    DispatchCommand dispatchCommand = new DispatchCommand(command);
+	    this.addDefaultHeaders(dispatchCommand);
+	    DispatchResult dispatchResult = this.dispatch(dispatchCommand);
+	    result = (R) dispatchResult.getResult();
+	    result.setCommandId(command.getCommandId());
+	    callback.onSuccess(command, result);
+	    LOGGER.debug("Finished command:" + command + " (" + (System.currentTimeMillis() - start) + "msec)");
+	} catch (DispatchException e) {
+	    callback.onError(command, e);
+	    throw e;
+	} catch (Throwable e) {
+	    DispatchException dispatchException = new DispatchException("Unknown error while executing command:" + e, e);
+	    callback.onError(command, dispatchException);
+	    throw dispatchException;
+	}
+	return result;
     }
 
-    protected void addDefaultHeaders(Command<? extends Result> command, DispatchCommand dispatchCommand) {
-        dispatchCommand.setHeader(Dispatcher.HEADER_COMMAND_CLASS, command.getClass().getName());
-        dispatchCommand.setHeader(Dispatcher.HEADER_COMMAND_ID, command.getCommandId());
+    @Override
+    public DispatchResult dispatch(DispatchCommand dispatchCommand) throws DispatchException {
+	DispatchResult dispatchResult = new DefaultDispatchFilterChain(filters, this.getExecutor()).filter(dispatchCommand);
+	this.addDefaultHeaders(dispatchResult);
+	return dispatchResult;
+    }
+
+    protected void addDefaultHeaders(DispatchCommand dispatchCommand) {
+	dispatchCommand.setHeader(Dispatcher.HEADER_COMMAND_CLASS, dispatchCommand.getCommand().getClass().getName());
+	dispatchCommand.setHeader(Dispatcher.HEADER_COMMAND_ID, dispatchCommand.getCommand().getCommandId());
     }
 
     protected void addDefaultHeaders(DispatchResult dispatchResult) {
 	dispatchResult.setHeader(Dispatcher.HEADER_RESULT_CLASS, dispatchResult.getResult().getClass().getName());
 	dispatchResult.setHeader(Dispatcher.HEADER_COMMAND_ID, dispatchResult.getResult().getCommandId());
     }
-    
-    protected DispatchCommand filterCommand(final DispatchCommand dispatchCommand) throws DispatchException {
-        CommandFilterChain filterChain = new DefaultCommandFilterChain(this.commandFilters);
-        return filterChain.filter(dispatchCommand);
+
+    public List<DispatchFilter> getFilters() {
+	return filters;
     }
 
-    protected DispatchResult filterResult(final DispatchResult dispatchResult) throws DispatchException {
-        ResultFilterChain filterChain = new DefaultResultFilterChain(this.resultFilters);
-        return filterChain.filter(dispatchResult);
+    public void addFilter(DispatchFilter filter) {
+	this.getFilters().add(filter);
     }
-
-    public void setCommandFilters(final List<CommandFilter> commandFilters) {
-        this.commandFilters = commandFilters;
-    }
-
-    public void setResultFilters(final List<ResultFilter> resultFilters) {
-        this.resultFilters = resultFilters;
-    }
-
-    public List<CommandFilter> getCommandFilters() {
-        return this.commandFilters;
-    }
-
-    public List<ResultFilter> getResultFilters() {
-        return this.resultFilters;
-    }
-
-    /**
-     * Delegate work to the {@link Action}
-     * 
-     * @param command
-     * @return
-     * @throws DispatchException
-     */
-    protected abstract DispatchResult execute(DispatchCommand dispatchCommand) throws DispatchException;
 
     public void setExecutorService(ExecutorService executorService) {
 	this.executorService = executorService;
     }
-    
+
     public void setTimeout(long timeout) {
 	this.timeout = timeout;
     }
-    
+
 }

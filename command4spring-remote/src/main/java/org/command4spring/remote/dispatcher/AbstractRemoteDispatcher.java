@@ -7,6 +7,7 @@ import org.command4spring.dispatcher.AbstractDispatcher;
 import org.command4spring.dispatcher.DispatchCommand;
 import org.command4spring.dispatcher.DispatchResult;
 import org.command4spring.dispatcher.Dispatcher;
+import org.command4spring.dispatcher.filter.Executor;
 import org.command4spring.exception.CommandSerializationException;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.exception.ExceptionUtil;
@@ -20,7 +21,7 @@ import org.command4spring.util.CommandUtil;
 /**
  * Remote HTTP implementation of the {@link Dispatcher}
  */
-public abstract class AbstractRemoteDispatcher extends AbstractDispatcher implements RemoteDispatcher {
+public abstract class AbstractRemoteDispatcher extends AbstractDispatcher implements RemoteDispatcher, Executor {
 
     private static final Log LOGGER = LogFactory.getLog(AbstractRemoteDispatcher.class);
 
@@ -32,7 +33,12 @@ public abstract class AbstractRemoteDispatcher extends AbstractDispatcher implem
     }
 
     @Override
-    protected DispatchResult execute(DispatchCommand dispatchCommand) throws DispatchException {
+    protected Executor getExecutor() {
+	return this;
+    }
+
+    @Override
+    public DispatchResult execute(DispatchCommand dispatchCommand) throws DispatchException {
 	LOGGER.debug("Executing remote command");
 	TextDispatcherCommand textDispatcherCommand=this.serializeCommand(dispatchCommand);
 	TextDispatcherResult textDispatcherResult=this.executeRemote(dispatchCommand.getCommand(), textDispatcherCommand);

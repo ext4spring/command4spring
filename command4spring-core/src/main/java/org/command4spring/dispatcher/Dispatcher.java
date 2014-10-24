@@ -1,6 +1,7 @@
 package org.command4spring.dispatcher;
 
 import org.command4spring.command.Command;
+import org.command4spring.dispatcher.callback.DispatcherCallback;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.result.Result;
 import org.command4spring.result.ResultFuture;

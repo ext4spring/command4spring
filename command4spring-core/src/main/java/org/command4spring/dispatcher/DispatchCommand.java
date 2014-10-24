@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.command4spring.command.Command;
-import org.command4spring.dispatcher.filter.CommandFilter;
 import org.command4spring.result.Result;
 
 /**
