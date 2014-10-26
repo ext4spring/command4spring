@@ -5,7 +5,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.command4spring.dispatcher.Dispatcher;
+import org.command4spring.dispatcher.ChainableDispatcher;
+import org.command4spring.remote.receiver.CommandReceiver;
+import org.command4spring.remote.receiver.DefaultCommandReceiver;
 import org.command4spring.serializer.Serializer;
 import org.command4spring.spring.dispatcher.SpringInVmDispatcher;
 import org.command4spring.xml.serializer.XmlSerializer;
@@ -26,7 +28,15 @@ public class SpringConfig {
     }
 
     @Bean
-    public Dispatcher dispatcher() {
-        return new SpringInVmDispatcher(this.executor());
+    public ChainableDispatcher dispatcher() {
+	SpringInVmDispatcher dispatcher = new SpringInVmDispatcher();
+	dispatcher.setExecutorService(this.executor());
+	return dispatcher;
     }
+
+    @Bean
+    public CommandReceiver commandReceiver() {
+	return new DefaultCommandReceiver(serializer(), dispatcher());
+    }
+
 }

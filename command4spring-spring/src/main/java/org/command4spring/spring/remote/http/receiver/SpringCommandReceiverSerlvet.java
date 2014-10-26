@@ -3,36 +3,25 @@ package org.command4spring.spring.remote.http.receiver;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
-import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.remote.http.receiver.AbstractHttpCommandReceiverServlet;
-import org.command4spring.serializer.Serializer;
+import org.command4spring.remote.receiver.CommandReceiver;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 @SuppressWarnings("serial")
 public class SpringCommandReceiverSerlvet extends AbstractHttpCommandReceiverServlet {
 
-    @Override
-    protected Dispatcher initDispatcher(final ServletConfig config) throws ServletException {
-        Dispatcher dispatcher;
-        String beanName = config.getInitParameter(DISPATCHER_ATTRIBUTE);
-        if (beanName == null) {
-            dispatcher = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(Dispatcher.class);
-        } else {
-            dispatcher = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(beanName, Dispatcher.class);
-        }
-        return dispatcher;
-    }
+    public static final String COMMAND_RECEIVER_ATTRIBUTE = "commandReceiver";
 
     @Override
-    protected Serializer initSerializer(final ServletConfig config) throws ServletException {
-        Serializer serializer;
-        String beanName = config.getInitParameter(SERIALIZER_ATTRIBUTE);
+    protected CommandReceiver initCommandReceiver(ServletConfig config) throws ServletException {
+	CommandReceiver commandReceiver;
+	String beanName = config.getInitParameter(COMMAND_RECEIVER_ATTRIBUTE);
         if (beanName == null) {
-            serializer = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(Serializer.class);
+	    commandReceiver = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(CommandReceiver.class);
         } else {
-            serializer = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(beanName, Serializer.class);
+	    commandReceiver = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext()).getBean(beanName, CommandReceiver.class);
         }
-        return serializer;
+	return commandReceiver;
     }
 
 }

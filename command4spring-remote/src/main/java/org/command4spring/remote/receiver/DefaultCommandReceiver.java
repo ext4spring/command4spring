@@ -7,7 +7,6 @@ import org.apache.commons.logging.LogFactory;
 import org.command4spring.command.DispatchCommand;
 import org.command4spring.dispatcher.ChainableDispatcher;
 import org.command4spring.exception.CommandSerializationException;
-import org.command4spring.exception.DispatchException;
 import org.command4spring.remote.dispatcher.RemoteDispatcher;
 import org.command4spring.remote.model.TextDispatcherCommand;
 import org.command4spring.remote.model.TextDispatcherResult;
@@ -29,7 +28,7 @@ public class DefaultCommandReceiver implements CommandReceiver {
     }
 
     @Override
-    public TextDispatcherResult execute(final TextDispatcherCommand textDispatcherCommand) throws DispatchException {
+    public TextDispatcherResult execute(final TextDispatcherCommand textDispatcherCommand) {
 	DispatchCommand dispatchCommand = null;
         try {
 	    dispatchCommand = this.convertRequest(textDispatcherCommand);

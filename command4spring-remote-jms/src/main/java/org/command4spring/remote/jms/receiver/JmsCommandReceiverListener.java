@@ -8,7 +8,8 @@ import javax.jms.MessageListener;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.command4spring.exception.CommandSerializationException;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.remote.jms.dispatch.JmsTemplate;
@@ -24,7 +25,7 @@ import org.command4spring.remote.receiver.CommandReceiver;
  * @author borbasp
  */
 public class JmsCommandReceiverListener implements MessageListener {
-    private static final Logger LOGGER = Logger.getLogger(JmsCommandReceiverListener.class);
+    private static final Log LOGGER = LogFactory.getLog(JmsCommandReceiverListener.class);
 
     private final CommandReceiver commandReceiver;
     private final JmsTemplate resultJmsTemplate;

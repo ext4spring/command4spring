@@ -111,5 +111,4 @@ public class RestHttpDispatcher extends AbstractRemoteDispatcher implements Remo
         }
     }
 
-
 }
