@@ -19,6 +19,7 @@ public class DefaultCommandReceiver implements CommandReceiver {
 
     private final Serializer serializer;
     private final ChainableDispatcher dispatcher;
+    // TODO: use proper timeout
     private final long timeout = 5000;
 
     public DefaultCommandReceiver(final Serializer serializer, final ChainableDispatcher dispatcher) {
