@@ -1,9 +1,8 @@
-package org.command4spring.dispatcher;
+package org.command4spring.command;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.command4spring.command.Command;
 import org.command4spring.result.Result;
 
 /**

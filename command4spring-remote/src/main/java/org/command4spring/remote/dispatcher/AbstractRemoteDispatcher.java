@@ -3,9 +3,8 @@ package org.command4spring.remote.dispatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.command4spring.command.Command;
+import org.command4spring.command.DispatchCommand;
 import org.command4spring.dispatcher.AbstractDispatcher;
-import org.command4spring.dispatcher.DispatchCommand;
-import org.command4spring.dispatcher.DispatchResult;
 import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.dispatcher.filter.Executor;
 import org.command4spring.exception.CommandSerializationException;
@@ -13,6 +12,7 @@ import org.command4spring.exception.DispatchException;
 import org.command4spring.exception.ExceptionUtil;
 import org.command4spring.remote.model.TextDispatcherCommand;
 import org.command4spring.remote.model.TextDispatcherResult;
+import org.command4spring.result.DispatchResult;
 import org.command4spring.result.NoResult;
 import org.command4spring.result.Result;
 import org.command4spring.serializer.Serializer;
@@ -71,7 +71,7 @@ public abstract class AbstractRemoteDispatcher extends AbstractDispatcher implem
      */
     protected TextDispatcherCommand serializeCommand(DispatchCommand dispatchCommand) throws CommandSerializationException {
 	LOGGER.debug("Serializing command before remote execution");
-	TextDispatcherCommand textDispatcherCommand=new TextDispatcherCommand(this.serializer.toText(dispatchCommand.getCommand()));
+	TextDispatcherCommand textDispatcherCommand = new TextDispatcherCommand(this.serializer.toText(dispatchCommand.getCommand()));
 	textDispatcherCommand.getHeaders().putAll(dispatchCommand.getHeaders());
 	return textDispatcherCommand;
     }

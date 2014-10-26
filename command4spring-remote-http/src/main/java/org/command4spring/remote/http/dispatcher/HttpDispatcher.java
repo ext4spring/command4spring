@@ -10,10 +10,8 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.command4spring.command.Command;
-import org.command4spring.dispatcher.AbstractDispatcher;
 import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.exception.DispatchException;
-import org.command4spring.remote.dispatcher.RemoteDispatcher;
 import org.command4spring.remote.exception.RemoteDispatchException;
 import org.command4spring.remote.http.mapper.HttpMapper;
 import org.command4spring.result.Result;
@@ -21,7 +19,9 @@ import org.command4spring.result.Result;
 /**
  * Remote HTTP implementation of the {@link Dispatcher}
  */
-public class HttpDispatcher extends AbstractDispatcher implements RemoteDispatcher {
+@Deprecated
+public class HttpDispatcher { // extends AbstractDispatcher implements
+			      // RemoteDispatcher {
 
     private static final Log LOGGER = LogFactory.getLog(HttpDispatcher.class);
     
@@ -40,8 +40,8 @@ public class HttpDispatcher extends AbstractDispatcher implements RemoteDispatch
 	this.targetUrl = targetUrl;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
+    // @SuppressWarnings("unchecked")
+    // @Override
     protected <C extends Command<R>, R extends Result> R execute(final C command) throws DispatchException {
 	try {	    
 	    HttpRequestBase httpRequest=this.httpMapper.createRequest(command, this.targetUrl);

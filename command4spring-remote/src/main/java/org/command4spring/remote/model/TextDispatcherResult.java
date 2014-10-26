@@ -11,13 +11,13 @@ public class TextDispatcherResult {
 
     public TextDispatcherResult(final String commandId, final String textResult) {
         this.textResult=textResult;
-        this.commandId=commandId;
+	this.commandId = commandId;
     }
 
     public String getCommandId() {
 	return commandId;
     }
-    
+
     public String getTextResult() {
         return this.textResult;
     }

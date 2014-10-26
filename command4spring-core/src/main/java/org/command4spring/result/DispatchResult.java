@@ -1,9 +1,7 @@
-package org.command4spring.dispatcher;
+package org.command4spring.result;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.command4spring.result.Result;
 
 /**
  * Wrapps a {@link Result} and adds header feature to it. The
@@ -13,22 +11,17 @@ import org.command4spring.result.Result;
  * @author pborbas
  *
  */
-public class DispatchResult {
-    private final Result result;
+public class DispatchResult<R extends Result> {
+    private final R result;
     private final Map<String, String> headers = new HashMap<String, String>();
 
-    public DispatchResult(Result result) {
+    public DispatchResult(R result) {
 	super();
 	this.result = result;
     }
 
     public Result getResult() {
 	return result;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public <R extends Result> R getResult(Class<R> resultType) {
-	return (R) result;
     }
     
     public String getHeader(final String headerName) {

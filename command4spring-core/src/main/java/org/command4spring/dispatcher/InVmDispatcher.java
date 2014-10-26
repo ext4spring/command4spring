@@ -8,11 +8,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.command4spring.action.Action;
 import org.command4spring.command.Command;
+import org.command4spring.command.DispatchCommand;
 import org.command4spring.dispatcher.filter.DispatchFilter;
 import org.command4spring.dispatcher.filter.Executor;
 import org.command4spring.exception.ActionNotFoundException;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.exception.DuplicateActionException;
+import org.command4spring.result.DispatchResult;
 import org.command4spring.result.Result;
 
 /**
@@ -26,6 +28,10 @@ public class InVmDispatcher extends AbstractDispatcher implements Dispatcher, Ex
 
     public InVmDispatcher() {
 	super();
+    }
+
+    public InVmDispatcher(List<DispatchFilter> filters) {
+	super(filters);
     }
 
     @Override

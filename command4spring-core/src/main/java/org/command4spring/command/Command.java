@@ -31,4 +31,5 @@ public interface Command<R extends Result> extends Serializable {
      * @return
      */
     String getCommandId();
+
 }

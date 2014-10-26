@@ -1,12 +1,12 @@
 package org.command4spring.spring.dispatcher;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 import org.command4spring.action.Action;
 import org.command4spring.command.Command;
 import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.dispatcher.InVmDispatcher;
+import org.command4spring.dispatcher.filter.DispatchFilter;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.exception.DuplicateActionException;
 import org.command4spring.result.Result;
@@ -22,6 +22,11 @@ public class SpringInVmDispatcher extends InVmDispatcher implements Dispatcher {
 
     public SpringInVmDispatcher() {
         super();
+    }
+
+    @Autowired(required = false)
+    public SpringInVmDispatcher(List<DispatchFilter> filters) {
+	super(filters);
     }
 
     @Override

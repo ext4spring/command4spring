@@ -1,8 +1,8 @@
 package org.command4spring.dispatcher.filter;
 
-import org.command4spring.dispatcher.DispatchCommand;
-import org.command4spring.dispatcher.DispatchResult;
+import org.command4spring.command.DispatchCommand;
 import org.command4spring.exception.DispatchException;
+import org.command4spring.result.DispatchResult;
 
 /**
  * 

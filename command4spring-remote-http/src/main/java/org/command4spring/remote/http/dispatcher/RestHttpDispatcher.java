@@ -54,7 +54,7 @@ public class RestHttpDispatcher extends AbstractRemoteDispatcher implements Remo
             HttpRequestBase httpRequest=this.createRequest(command, commandMessage);
             LOGGER.debug("Sending HTTP request to:"+httpRequest.getURI().toString()+" Method:"+httpRequest.getMethod());
             CloseableHttpResponse response = this.httpclient.execute(httpRequest);        
-            return this.parseResponse(response, commandMessage);
+	    return this.parseResponse(response, command);
         } catch (Exception e) {
             throw new RemoteDispatchException("Error while sending command through HTTP to URL:" + this.targetUrl + ". Error message:" + e, e);
         }
@@ -98,13 +98,13 @@ public class RestHttpDispatcher extends AbstractRemoteDispatcher implements Remo
         }
     }  
 
-    protected TextDispatcherResult parseResponse(final CloseableHttpResponse httpResponse, final TextDispatcherCommand commandMessage) throws DispatchException {
+    protected TextDispatcherResult parseResponse(final CloseableHttpResponse httpResponse, final Command<? extends Result> command) throws DispatchException {
         int status = httpResponse.getStatusLine().getStatusCode();
         HttpEntity entity = httpResponse.getEntity();
         String responseBody;
         try {
             responseBody = EntityUtils.toString(entity);
-            TextDispatcherResult resultMessage=new TextDispatcherResult(responseBody);
+	    TextDispatcherResult resultMessage = new TextDispatcherResult(command.getCommandId(), responseBody);
             return resultMessage;
         } catch (ParseException | IOException e) {
             throw new RemoteDispatchException("Error reading HTTP response. HTTP status:" + status + "." + e, e);

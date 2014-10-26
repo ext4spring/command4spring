@@ -1,8 +1,9 @@
 package org.command4spring.dispatcher.filter;
 
-import org.command4spring.dispatcher.DispatchCommand;
-import org.command4spring.dispatcher.DispatchResult;
+import org.command4spring.command.DispatchCommand;
 import org.command4spring.exception.DispatchException;
+import org.command4spring.result.DispatchResult;
+import org.command4spring.result.Result;
 
 /**
  * Filter interface for dispatchers.
@@ -22,6 +23,6 @@ public interface DispatchFilter {
      * @return
      * @throws DispatchException
      */
-    public DispatchResult filter(DispatchCommand dispatchCommand, DispatchFilterChain filterChain) throws DispatchException;
+    public DispatchResult<? extends Result> filter(DispatchCommand dispatchCommand, DispatchFilterChain filterChain) throws DispatchException;
 
 }
