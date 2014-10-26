@@ -5,6 +5,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.command4spring.dispatcher.Dispatcher;
+import org.command4spring.dispatcher.filter.DispatchFilter;
 import org.command4spring.exception.AsyncErrorException;
 import org.command4spring.exception.AsyncInterruptedException;
 import org.command4spring.exception.AsyncTimeoutException;
@@ -13,7 +15,9 @@ import org.command4spring.exception.ExceptionUtil;
 
 /**
  * Wrapper for Java {@link Future} to force get timeouts and convert Exceptions
- * for more convenient usage
+ * for more convenient usage. Besides the concrete {@link Result} it gives
+ * access to the {@link Dispatcher}'s {@link DispatchResult} which contains
+ * headers of local and/or remote {@link DispatchFilter}s
  * 
  * @author pborbas
  * @param <T>
@@ -45,6 +49,7 @@ public class ResultFuture<T extends Result> implements Future<T> {
 	return this.wrappedFuture.isDone();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     @Deprecated
     /**
@@ -58,12 +63,7 @@ public class ResultFuture<T extends Result> implements Future<T> {
 	}
     }
 
-    private void killOnTimeout() {
-	if (!this.wrappedFuture.isCancelled() && this.wrappedFuture.isCancelled() && System.currentTimeMillis() > startTime + timeout) {
-	    this.wrappedFuture.cancel(true);
-	}
-    }
-
+    @SuppressWarnings("unchecked")
     @Override
     @Deprecated
     /**
@@ -77,8 +77,13 @@ public class ResultFuture<T extends Result> implements Future<T> {
 	return this.getResult(timeout, TimeUnit.MILLISECONDS);
     }
 
+    @SuppressWarnings("unchecked")
     public T getResult(final long timeout, final TimeUnit unit) throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
 	return (T) this.getDispatchResult(timeout, unit).getResult();
+    }
+
+    public DispatchResult<T> getDispatchResult() throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
+	return this.getDispatchResult(timeout, TimeUnit.MILLISECONDS);
     }
 
     public DispatchResult<T> getDispatchResult(final long timeout, final TimeUnit unit) throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
@@ -99,5 +104,10 @@ public class ResultFuture<T extends Result> implements Future<T> {
 	}
     }
 
+    private void killOnTimeout() {
+	if ((!this.wrappedFuture.isCancelled() && !this.wrappedFuture.isDone()) && (System.currentTimeMillis() > startTime + timeout)) {
+	    this.wrappedFuture.cancel(true);
+	}
+    }
 
 }
