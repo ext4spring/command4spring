@@ -21,8 +21,9 @@ package org.command4spring.remote.http.receiver;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
-import org.command4spring.dispatcher.ChainableDispatcher;
 import org.command4spring.dispatcher.InVmDispatcher;
+import org.command4spring.example.SampleAction;
+import org.command4spring.exception.DuplicateActionException;
 import org.command4spring.remote.receiver.CommandReceiver;
 import org.command4spring.remote.receiver.DefaultCommandReceiver;
 import org.command4spring.serializer.Serializer;
@@ -33,12 +34,15 @@ public class TestHttpReceiverServlet extends AbstractHttpCommandReceiverServlet 
 
     @Override
     protected CommandReceiver initCommandReceiver(final ServletConfig config) throws ServletException {
-
-        Serializer serializer = new XmlSerializer();
-        ChainableDispatcher dispatcher = new InVmDispatcher();
-        DefaultCommandReceiver commandReceiver = new DefaultCommandReceiver(serializer, dispatcher);
-        return commandReceiver;
+        try {
+            Serializer serializer = new XmlSerializer();
+            InVmDispatcher dispatcher = new InVmDispatcher();
+            dispatcher.registerAction(new SampleAction());
+            DefaultCommandReceiver commandReceiver = new DefaultCommandReceiver(serializer, dispatcher);
+            return commandReceiver;
+        } catch (DuplicateActionException e) {
+            throw new ServletException(e);
+        }
     }
-
 
 }

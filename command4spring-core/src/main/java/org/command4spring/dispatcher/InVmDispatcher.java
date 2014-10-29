@@ -27,46 +27,49 @@ public class InVmDispatcher extends AbstractDispatcher implements Dispatcher, Ex
     private Map<Class<?>, Action<? extends Command<? extends Result>, ? extends Result>> actionsMap = new HashMap<Class<?>, Action<? extends Command<? extends Result>, ? extends Result>>();
 
     public InVmDispatcher() {
-	super();
+        super();
     }
 
-    public InVmDispatcher(List<DispatchFilter> filters) {
-	super(filters);
+    public InVmDispatcher(final List<DispatchFilter> filters) {
+        super(filters);
     }
 
     @Override
     protected Executor getExecutor() {
-	return this;
+        return this;
     }
 
     @Override
-    public DispatchResult execute(DispatchCommand dispatchCommand) throws DispatchException {
-	Result result = this.executeInVm(dispatchCommand.getCommand());
-	DispatchResult dispatchResult = new DispatchResult(result);
-	return dispatchResult;
+    public DispatchResult<Result> execute(final DispatchCommand dispatchCommand) throws DispatchException {
+        Result result = this.executeInVm(dispatchCommand.getCommand());
+        DispatchResult<Result> dispatchResult = new DispatchResult<Result>(result);
+        return dispatchResult;
     }
 
     protected <C extends Command<R>, R extends Result> R executeInVm(final C command) throws DispatchException {
-	return this.findAction(command).validate(command).execute(command);
+        return this.findAction(command).validate(command).execute(command);
     }
 
     @SuppressWarnings("unchecked")
     protected <C extends Command<R>, R extends Result> Action<C, R> findAction(final C command) throws ActionNotFoundException {
-	if (this.actionsMap.containsKey(command.getClass())) {
-	    return (Action<C, R>) this.actionsMap.get(command.getClass());
-	}
-	throw new ActionNotFoundException("Action not found for command:" + command);
+        if (this.actionsMap.containsKey(command.getClass())) {
+            return (Action<C, R>) this.actionsMap.get(command.getClass());
+        }
+        throw new ActionNotFoundException("Action not found for command:" + command);
     }
 
     public void setActions(final List<Action<? extends Command<? extends Result>, ? extends Result>> actions) throws DuplicateActionException {
-	this.actionsMap = new HashMap<Class<?>, Action<? extends Command<? extends Result>, ? extends Result>>();
-	for (Action<? extends Command<? extends Result>, ? extends Result> action : actions) {
-	    if (this.actionsMap.containsKey(action.getCommandType())) {
-		throw new DuplicateActionException("Duplicate action:" + action.getClass().getName() + " for command type:" + action.getCommandType());
-	    }
-	    LOGGER.info("Action:" + action.getClass().getName() + " registered for command type:" + action.getCommandType());
-	    this.actionsMap.put(action.getCommandType(), action);
-	}
+        this.actionsMap = new HashMap<Class<?>, Action<? extends Command<? extends Result>, ? extends Result>>();
+        for (Action<? extends Command<? extends Result>, ? extends Result> action : actions) {
+            this.registerAction(action);
+        }
+    }
+
+    public void registerAction(final Action<? extends Command<? extends Result>, ? extends Result> action) throws DuplicateActionException {
+        if (this.actionsMap.containsKey(action.getCommandType())) {
+            throw new DuplicateActionException("Duplicate action:" + action.getClass().getName() + " for command type:" + action.getCommandType());
+        }
+        LOGGER.info("Action:" + action.getClass().getName() + " registered for command type:" + action.getCommandType());this.actionsMap.put(action.getCommandType(), action);
     }
 
 }
