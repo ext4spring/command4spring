@@ -15,25 +15,25 @@ public class DispatchResult<R extends Result> {
     private final R result;
     private final Map<String, String> headers = new HashMap<String, String>();
 
-    public DispatchResult(R result) {
-	super();
-	this.result = result;
+    public DispatchResult(final R result) {
+        super();
+        this.result = result;
     }
 
-    public Result getResult() {
-	return result;
+    public R getResult() {
+        return this.result;
     }
-    
+
     public String getHeader(final String headerName) {
-	return this.headers.get(headerName);
+        return this.headers.get(headerName);
     }
 
     public void setHeader(final String headerName, final String value) {
-	this.headers.put(headerName, value);
+        this.headers.put(headerName, value);
     }
 
     public Map<String, String> getHeaders() {
-	return this.headers;
+        return this.headers;
     }
 
 }

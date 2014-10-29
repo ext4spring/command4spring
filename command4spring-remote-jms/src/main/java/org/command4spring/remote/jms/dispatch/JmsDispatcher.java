@@ -25,8 +25,6 @@ public class JmsDispatcher extends AbstractRemoteDispatcher {
     private final JmsTemplate commandJmsTemplate;
     private final JmsTemplate resultJmsTemplate;
 
-    private final long timeout = 5000;
-
     public JmsDispatcher(final JmsTemplate commandJmsTemplate, final JmsTemplate resultJmsTemplate, final Serializer serializer) {
         super(serializer);
         this.commandJmsTemplate = commandJmsTemplate;
@@ -35,14 +33,14 @@ public class JmsDispatcher extends AbstractRemoteDispatcher {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected TextDispatcherResult executeRemote(final Command<? extends Result> command, final TextDispatcherCommand commandMessage) throws DispatchException {
+    protected TextDispatcherResult executeRemote(final Command<? extends Result> command, final TextDispatcherCommand commandMessage, final Long timeout) throws DispatchException {
         LOGGER.debug("Dispatching command through JMS. Command ID:" + command.getCommandId());
         try {
             this.commandJmsTemplate.send(new MessageCreator() {
                 @Override
                 public Message createMessage(final Session session) throws JMSException {
                     TextMessage message = session.createTextMessage();
-                    message.setJMSExpiration(JmsDispatcher.this.timeout);
+                    message.setJMSExpiration(timeout);
                     for (String headerKey : commandMessage.getHeaders().keySet()) {
                         message.setStringProperty(headerKey, commandMessage.getHeaders().get(headerKey));
                     }
@@ -56,7 +54,7 @@ public class JmsDispatcher extends AbstractRemoteDispatcher {
                 return new TextDispatcherResult(command.getCommandId(), null);
             } else {
                 LOGGER.debug("Command sent through JMS. Waiting for result. Command ID:" + command.getCommandId());
-                TextMessage jmsResultMessage = this.resultJmsTemplate.receive("JMSCorrelationID='" + command.getCommandId() + "'", TextMessage.class, this.timeout);
+                TextMessage jmsResultMessage = this.resultJmsTemplate.receive("JMSCorrelationID='" + command.getCommandId() + "'", TextMessage.class, timeout);
                 LOGGER.debug("Result received. Command ID:" + command.getCommandId());
                 String textResult = jmsResultMessage.getText();
                 TextDispatcherResult resultMessage = new TextDispatcherResult(command.getCommandId(), textResult);

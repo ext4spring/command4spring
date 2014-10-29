@@ -12,8 +12,12 @@ import org.command4spring.result.ResultFuture;
  * 
  */
 public interface Dispatcher {
+    public static final long DEFAULT_TIMEOUT = 30000;
+
+    public static final String HEADER_TIMEOUT = "commandTimeout";
     public static final String HEADER_COMMAND_ID = "commandId";
     public static final String HEADER_COMMAND_CLASS = "commandClass";
+    public static final String HEADER_COMMAND_EXECUTION_TIME= "commandExecutionTime";
     public static final String HEADER_RESULT_CLASS = "resultClass";
 
     /**
@@ -36,5 +40,5 @@ public interface Dispatcher {
      */
     <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(C command, DispatcherCallback callback) throws DispatchException;
 
-    
+
 }

@@ -13,4 +13,6 @@ public interface CommandReceiver {
      * @return
      */
     TextDispatcherResult execute(TextDispatcherCommand commandMessage);
+
+    long getTimeout();
 }

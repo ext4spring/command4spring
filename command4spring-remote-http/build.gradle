@@ -4,5 +4,8 @@ dependencies {
 	compile 'org.apache.commons:commons-io:'+commonsIoVersion
 	compile 'javax.ws.rs:jsr311-api:1.1.1'
 	provided group: 'org.apache.tomcat', name: 'tomcat-servlet-api', version: tomcatServletApiVersion
-
+        testCompile project(':command4spring-xml')
+        testCompile 'org.eclipse.jetty:jetty-server:9.2.3.v20140905'
+        testCompile 'org.eclipse.jetty:jetty-servlet:9.2.3.v20140905'
+        
 }
