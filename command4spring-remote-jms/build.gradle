@@ -4,6 +4,7 @@ dependencies {
 
     testCompile project(':command4spring-spring')
     testCompile project(':command4spring-xml')
+    testCompile project(':command4spring-testbase')
     
     testCompile group: 'org.springframework', name: 'spring-context', version: springVersion
     testCompile group: 'org.springframework', name: 'spring-core', version: springVersion

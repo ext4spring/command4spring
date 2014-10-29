@@ -30,15 +30,14 @@
 	</bean>
 
 
-	<bean class="org.command4spring.example.SampleAction"></bean>
-	<bean class="org.command4spring.remote.jms.dispatch.TestAction"></bean>
-	<bean class="org.command4spring.remote.jms.dispatch.TestWaitAction"></bean>
-	<bean class="org.command4spring.remote.jms.dispatch.TestFailAction"></bean>
+<!-- 	<bean class="org.command4spring.example.SampleAction"></bean> -->
+<!-- 	<bean class="org.command4spring.testbase.action.NoResultAction"></bean> -->
+<!-- 	<bean class="org.command4spring.testbase.action.TestWaitAction"></bean> -->
+<!-- 	<bean class="org.command4spring.testbase.action.TestFailAction"></bean> -->
 
-	<bean class="org.command4spring.remote.jms.dispatch.TestFilter"></bean>
+<!-- 	<bean class="org.command4spring.testbase.filter.TestFilter"></bean> -->
 
-	<bean id="dispatcher" class="org.command4spring.spring.dispatcher.SpringInVmDispatcher">
-	</bean>
+	<bean id="dispatcher" class="org.command4spring.testbase.dispatcher.TestDispatcherFactory" factory-method="createTestInVmDispatcher"/>
 	<bean id="serializer" class="org.command4spring.xml.serializer.XmlSerializer" />
 
 	<!-- Dispatcher that sends through JMS -->

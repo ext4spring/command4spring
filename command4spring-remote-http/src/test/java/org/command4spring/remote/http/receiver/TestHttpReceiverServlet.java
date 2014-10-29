@@ -22,11 +22,10 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
 import org.command4spring.dispatcher.InVmDispatcher;
-import org.command4spring.example.SampleAction;
-import org.command4spring.exception.DuplicateActionException;
 import org.command4spring.remote.receiver.CommandReceiver;
 import org.command4spring.remote.receiver.DefaultCommandReceiver;
 import org.command4spring.serializer.Serializer;
+import org.command4spring.testbase.dispatcher.TestDispatcherFactory;
 import org.command4spring.xml.serializer.XmlSerializer;
 
 @SuppressWarnings("serial")
@@ -34,15 +33,10 @@ public class TestHttpReceiverServlet extends AbstractHttpCommandReceiverServlet 
 
     @Override
     protected CommandReceiver initCommandReceiver(final ServletConfig config) throws ServletException {
-        try {
-            Serializer serializer = new XmlSerializer();
-            InVmDispatcher dispatcher = new InVmDispatcher();
-            dispatcher.registerAction(new SampleAction());
-            DefaultCommandReceiver commandReceiver = new DefaultCommandReceiver(serializer, dispatcher);
-            return commandReceiver;
-        } catch (DuplicateActionException e) {
-            throw new ServletException(e);
-        }
+        Serializer serializer = new XmlSerializer();
+        InVmDispatcher dispatcher = TestDispatcherFactory.createTestInVmDispatcher();
+        DefaultCommandReceiver commandReceiver = new DefaultCommandReceiver(serializer, dispatcher);
+        return commandReceiver;
     }
 
 }

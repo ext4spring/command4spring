@@ -1,0 +1,8 @@
+dependencies {
+	compile project(':command4spring-core')
+	compile project(':command4spring-xml')
+	compile project(':command4spring-remote')
+   	compile 'log4j:log4j:'+log4jVersion
+	compile 'log4j:log4j:'+log4jVersion
+        compile 'junit:junit:'+junitVersion
+}

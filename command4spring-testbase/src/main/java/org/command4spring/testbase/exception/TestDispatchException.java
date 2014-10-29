@@ -1,4 +1,4 @@
-package org.command4spring.remote.jms.dispatch;
+package org.command4spring.testbase.exception;
 
 import org.command4spring.exception.DispatchException;
 

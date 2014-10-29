@@ -1,4 +1,4 @@
-package org.command4spring.remote.jms.dispatch;
+package org.command4spring.testbase.filter;
 
 import org.command4spring.command.DispatchCommand;
 import org.command4spring.dispatcher.filter.DispatchFilter;

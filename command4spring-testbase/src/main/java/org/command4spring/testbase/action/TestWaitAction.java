@@ -1,9 +1,10 @@
-package org.command4spring.remote.jms.dispatch;
+package org.command4spring.testbase.action;
 
 import org.command4spring.action.Action;
 import org.command4spring.exception.CommandValidationException;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.result.VoidResult;
+import org.command4spring.testbase.command.TestWaitCommand;
 
 public class TestWaitAction implements Action<TestWaitCommand, VoidResult>{
 

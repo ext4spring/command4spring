@@ -1,11 +1,12 @@
-package org.command4spring.remote.jms.dispatch;
+package org.command4spring.testbase.action;
 
 import org.command4spring.action.Action;
 import org.command4spring.exception.CommandValidationException;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.result.NoResult;
+import org.command4spring.testbase.command.NoResultCommand;
 
-public class TestAction implements Action<NoResultCommand, NoResult>{
+public class NoResultAction implements Action<NoResultCommand, NoResult>{
 
     @Override
     public Action<NoResultCommand, NoResult> validate(final NoResultCommand command) throws CommandValidationException {
