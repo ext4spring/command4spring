@@ -23,11 +23,12 @@ Remove Spring dependency and only add it as new module(s)
 -Jms dispatcher
 	-Implement as remote dispatcher and receiver
 	-configurable message format
-
-TODO:
 Timeout support
 	-All dispatchers should have timeout. Remotes delegates timeouts to the endpoint and protocoll specific timeout are used like Jms ttl.
 	-The executor thread should be recycled on timeout, to prevent hanging threads.
+Retry filter with retry policy
+
+TODO:
 Cache support
 	-Implement as a DispatcherFilter
 	-Remote uses headers
@@ -36,7 +37,6 @@ Cache support
 -Load balancer dispatcher (uses an LB strategy to delegate to dispatcher instances)
 
 Other Filters
-	-Retry with retry policy
 	-Circuit breaker
 	-Default result in case of error
 	-Logging

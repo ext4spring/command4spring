@@ -61,5 +61,7 @@ public abstract class AbstractDispatcherTest {
         ResultFuture<VoidResult> futureResult = this.getDispatcher().dispatch(command);
         futureResult.getResult();
     }
+
+
     protected abstract ChainableDispatcher getDispatcher();
 }
