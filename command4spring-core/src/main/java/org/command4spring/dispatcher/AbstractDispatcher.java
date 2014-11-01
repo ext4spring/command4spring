@@ -5,14 +5,11 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.Future;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.command4spring.command.Command;
 import org.command4spring.command.DispatchCommand;
-import org.command4spring.dispatcher.callback.DispatcherCallback;
-import org.command4spring.dispatcher.callback.NopDispatcherCallback;
 import org.command4spring.dispatcher.filter.DefaultDispatchFilterChain;
 import org.command4spring.dispatcher.filter.DispatchFilter;
 import org.command4spring.dispatcher.filter.Executor;
@@ -29,7 +26,6 @@ public abstract class AbstractDispatcher implements Dispatcher, ChainableDispatc
     private static final Log LOGGER = LogFactory.getLog(AbstractDispatcher.class);
 
     private ExecutorService executorService;
-    private final DispatcherCallback defaultCallback = new NopDispatcherCallback();
     private final List<DispatchFilter> filters;
     private Long timeout;
 
@@ -54,29 +50,19 @@ public abstract class AbstractDispatcher implements Dispatcher, ChainableDispatc
 
     @Override
     public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(final C command) throws DispatchException {
-        return this.dispatch(command, this.defaultCallback);
-    }
-
-    @Override
-    public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(final C command, final DispatcherCallback callback) throws DispatchException {
-        DispatchCommand dispatchCommand = new DispatchCommand(command);
-        return this.dispatch(dispatchCommand, callback);
+	return this.dispatch(new DispatchCommand(command));
     }
 
     @Override
     public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(final DispatchCommand dispatchCommand) throws DispatchException {
-        return this.dispatch(dispatchCommand, this.defaultCallback);
-    }
-
-    @Override
-    public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(final DispatchCommand dispatchCommand, final DispatcherCallback callback) throws DispatchException {
-        Future<DispatchResult<R>> future = this.executorService.submit(new Callable<DispatchResult<R>>() {
+	final ResultFuture<R> result = new ResultFuture<R>(this.getResultTimeout(dispatchCommand));
+	result.setWrappedFuture(this.executorService.submit(new Callable<DispatchResult<R>>() {
             @Override
             public DispatchResult<R> call() throws Exception {
-                return AbstractDispatcher.this.executeCommonWorkflow(dispatchCommand, callback);
+		return AbstractDispatcher.this.executeCommonWorkflow(dispatchCommand, result);
             }
-        });
-        return new ResultFuture<R>(future, this.getResultTimeout(dispatchCommand));
+	}));
+	return result;
     }
 
     protected long getResultTimeout(final DispatchCommand dispatchCommand) {
@@ -94,14 +80,13 @@ public abstract class AbstractDispatcher implements Dispatcher, ChainableDispatc
         long start = System.currentTimeMillis();
         R result;
         try {
-            callback.beforeDispatch(dispatchCommand.getCommand());
             this.addDefaultHeaders(dispatchCommand);
             DispatchResult<R> dispatchResult = (DispatchResult<R>) new DefaultDispatchFilterChain(this.filters, this.getExecutor()).filter(dispatchCommand);
             result = dispatchResult.getResult();
             result.setCommandId(dispatchCommand.getCommand().getCommandId());
             String executionTime = new Long(System.currentTimeMillis() - start).toString();
             this.addDefaultHeaders(dispatchResult, executionTime);
-            callback.onSuccess((C) dispatchCommand.getCommand(), result);
+            callback.onSuccess(dispatchCommand.getCommand(), result);
             LOGGER.debug("Finished command:" + dispatchCommand.getCommand().getCommandType() + ". ID:" + dispatchCommand.getCommand().getCommandId() + " (" + executionTime + "msec)");
             return dispatchResult;
         } catch (DispatchException e) {

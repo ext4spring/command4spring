@@ -20,10 +20,10 @@ subprojects {
     }
 
     dependencies {
-     	compile 'commons-logging:commons-logging:1.2+'
+     	compile 'commons-logging:commons-logging:'+commonsLoggingVersion
       	testCompile 'log4j:log4j:'+log4jVersion
        	testCompile 'junit:junit:'+junitVersion
-       	testCompile 'org.mockito:mockito-all:1.9.5'
+       	testCompile 'org.mockito:mockito-all:'+mockitoVersion
     }
 
     group = 'org.command4spring'

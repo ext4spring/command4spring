@@ -5,7 +5,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.command4spring.command.Command;
 import org.command4spring.dispatcher.Dispatcher;
+import org.command4spring.dispatcher.DispatcherCallback;
 import org.command4spring.dispatcher.filter.DispatchFilter;
 import org.command4spring.exception.AsyncErrorException;
 import org.command4spring.exception.AsyncInterruptedException;
@@ -20,18 +22,59 @@ import org.command4spring.exception.ExceptionUtil;
  * headers of local and/or remote {@link DispatchFilter}s
  * 
  * @author pborbas
- * @param <T>
+ * @param <R>
  */
-public class ResultFuture<T extends Result> implements Future<T> {
+public class ResultFuture<R extends Result> implements Future<R>, DispatcherCallback {
 
     private final long startTime;
     private final long timeout;
-    private final Future<DispatchResult<T>> wrappedFuture;
+    private Future<DispatchResult<R>> wrappedFuture;
+    private R result;
+    private DispatchException exception;
+    private ResultCallback<R> callback;
 
-    public ResultFuture(final Future<DispatchResult<T>> wrappedFuture, long timeout) {
+    public ResultFuture(long timeout) {
+	super();
+	this.timeout = timeout;
+	this.startTime = System.currentTimeMillis();
+    }
+
+    public ResultFuture(final Future<DispatchResult<R>> wrappedFuture, long timeout) {
 	this.wrappedFuture = wrappedFuture;
 	this.timeout = timeout;
 	this.startTime = System.currentTimeMillis();
+    }
+
+    public void setWrappedFuture(Future<DispatchResult<R>> wrappedFuture) {
+	this.wrappedFuture = wrappedFuture;
+    }
+
+    public void registerCallback(ResultCallback<R> callback) {
+	this.callback = callback;
+	this.notifyCallback();
+    }
+
+    @Override
+    public void onError(Command<? extends Result> command, DispatchException e) throws DispatchException {
+	this.exception = e;
+	this.notifyCallback();
+    }
+
+    @Override
+    public void onSuccess(Command<? extends Result> command, Result result) throws DispatchException {
+	this.result = (R) result;
+	this.notifyCallback();
+    }
+
+    private void notifyCallback() {
+	if (callback != null) {
+	    if (this.result != null) {
+		this.callback.onSuccess(this.result);
+	    }
+	    if (this.exception != null) {
+		this.callback.onError(exception);
+	    }
+	}
     }
 
     @Override
@@ -55,9 +98,9 @@ public class ResultFuture<T extends Result> implements Future<T> {
     /**
      * use getResult instead
      */
-    public T get() throws InterruptedException, ExecutionException {
+    public R get() throws InterruptedException, ExecutionException {
 	try {
-	    return (T) this.wrappedFuture.get(timeout, TimeUnit.MILLISECONDS).getResult();
+	    return this.wrappedFuture.get(timeout, TimeUnit.MILLISECONDS).getResult();
 	} catch (TimeoutException e) {
 	    throw new ExecutionException(e);
 	}
@@ -69,24 +112,24 @@ public class ResultFuture<T extends Result> implements Future<T> {
     /**
      * use getResult instead
      */
-    public T get(final long timeout, final TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-	return (T) this.wrappedFuture.get(timeout, unit).getResult();
+    public R get(final long timeout, final TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+	return this.wrappedFuture.get(timeout, unit).getResult();
     }
 
-    public T getResult() throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
+    public R getResult() throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
 	return this.getResult(timeout, TimeUnit.MILLISECONDS);
     }
 
     @SuppressWarnings("unchecked")
-    public T getResult(final long timeout, final TimeUnit unit) throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
-	return (T) this.getDispatchResult(timeout, unit).getResult();
+    public R getResult(final long timeout, final TimeUnit unit) throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
+	return this.getDispatchResult(timeout, unit).getResult();
     }
 
-    public DispatchResult<T> getDispatchResult() throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
+    public DispatchResult<R> getDispatchResult() throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
 	return this.getDispatchResult(timeout, TimeUnit.MILLISECONDS);
     }
 
-    public DispatchResult<T> getDispatchResult(final long timeout, final TimeUnit unit) throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
+    public DispatchResult<R> getDispatchResult(final long timeout, final TimeUnit unit) throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
 	try {
 	    return this.wrappedFuture.get(timeout, unit);
 	} catch (InterruptedException e) {

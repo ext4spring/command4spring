@@ -12,6 +12,7 @@ import org.command4spring.exception.DispatchException;
 import org.command4spring.result.DispatchResult;
 import org.command4spring.result.NoResult;
 import org.command4spring.result.Result;
+import org.command4spring.result.ResultCallback;
 import org.command4spring.result.ResultFuture;
 import org.command4spring.result.VoidResult;
 import org.command4spring.testbase.command.NoResultCommand;
@@ -21,6 +22,7 @@ import org.command4spring.testbase.exception.TestDispatchException;
 import org.command4spring.testbase.filter.TestFilter;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public abstract class AbstractDispatcherTest {
 
@@ -62,6 +64,31 @@ public abstract class AbstractDispatcherTest {
         futureResult.getResult();
     }
 
+    @Test
+    public void testResultFutureCallsCallbackOnSuccess() throws DispatchException {
+	SampleCommand command = new SampleCommand();
+	ResultFuture<SampleResult> futureResult = this.getDispatcher().dispatch(command);
+	ResultCallback<SampleResult> resultCallback = Mockito.mock(ResultCallback.class);
+	futureResult.registerCallback(resultCallback);
+	SampleResult sampleResult = futureResult.getResult();
+	Mockito.verify(resultCallback).onSuccess(sampleResult);
+    }
+
+    @Test
+    public void testResultFutureCallsCallbackOnFailure() throws DispatchException {
+	TestFailCommand command = new TestFailCommand();
+	ResultFuture<VoidResult> futureResult = this.getDispatcher().dispatch(command);
+	ResultCallback<VoidResult> resultCallback = Mockito.mock(ResultCallback.class);
+	futureResult.registerCallback(resultCallback);
+	VoidResult result;
+	DispatchException dispatchException = null;
+	try {
+	    result = futureResult.getResult();
+	} catch (DispatchException e) {
+	    dispatchException = e;
+	}
+	Mockito.verify(resultCallback).onError(dispatchException);
+    }
 
     protected abstract ChainableDispatcher getDispatcher();
 }

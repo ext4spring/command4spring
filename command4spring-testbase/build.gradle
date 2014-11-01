@@ -3,6 +3,6 @@ dependencies {
 	compile project(':command4spring-xml')
 	compile project(':command4spring-remote')
    	compile 'log4j:log4j:'+log4jVersion
-	compile 'log4j:log4j:'+log4jVersion
-        compile 'junit:junit:'+junitVersion
+    compile 'junit:junit:'+junitVersion
+    compile 'org.mockito:mockito-all:'+mockitoVersion
 }
