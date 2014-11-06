@@ -79,7 +79,7 @@ public class RestHttpDispatcher extends AbstractRemoteDispatcher implements Remo
             request.setConfig(requestConfig);
             return request;
         } catch (UnsupportedEncodingException e) {
-            throw new DispatchException("Error while creating HTTP message from command:" + e, e);
+            throw new RemoteDispatchException("Error while creating HTTP message from command:" + e, e);
         }
     }
 
