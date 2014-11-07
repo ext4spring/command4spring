@@ -1,9 +1,3 @@
-apply plugin: 'war'
-apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
-farm {
-  webapp ':command4spring-sample-service'
-  webapp ':command4spring-sample-web'
-}
 task wrapper(type: Wrapper) {
         gradleVersion = '2.0'
         jarFile = '../wrapper/wrapper.jar'
@@ -13,6 +7,8 @@ subprojects {
 
     apply plugin: 'java'
     apply plugin: 'eclipse'
+    apply plugin: 'maven'
+
 
     configurations {
         provided
@@ -30,6 +26,7 @@ subprojects {
        	testCompile 'org.mockito:mockito-all:1.9.5'
     }
 
+    group = 'org.command4spring'
     version = '1.0-SNAPSHOT'
 
     jar {

@@ -25,12 +25,13 @@ public class SpringInVmDispatcher extends InVmDispatcher implements Dispatcher {
     }
 
     @Autowired(required = false)
-    public SpringInVmDispatcher(List<DispatchFilter> filters) {
-	super(filters);
+    public SpringInVmDispatcher(final List<DispatchFilter> filters) {
+        super(filters);
     }
 
     @Override
     @Transactional
+    //TODO: transactional won't work with a Dispatcher that uses ExecutorService and runs on separate thread
     public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(final C command) throws DispatchException {
         return super.dispatch(command);
     }

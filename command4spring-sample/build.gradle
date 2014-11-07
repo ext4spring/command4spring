@@ -1,0 +1,42 @@
+task wrapper(type: Wrapper) {
+        gradleVersion = '2.0'
+        jarFile = '../wrapper/wrapper.jar'
+}
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+
+    configurations {
+        provided
+        compile.extendsFrom provided
+    }
+
+    repositories {
+       mavenLocal()
+       mavenCentral()
+    }
+
+    dependencies {
+     	compile 'commons-logging:commons-logging:1.2+'
+      	testCompile 'log4j:log4j:1.2.+'
+       	testCompile 'junit:junit:4.11'
+    }
+
+    group = 'org.command4spring.sample'
+    version = '1.0-SNAPSHOT'
+
+    jar {
+        manifest.attributes provider: 'Peter Borbas'
+    }
+
+task wrapper(type: Wrapper) {
+        gradleVersion = '2.0'
+        jarFile = '../wrapper/wrapper.jar'
+}
+
+}
