@@ -147,4 +147,16 @@ public abstract class AbstractDispatcher implements Dispatcher, ChainableDispatc
         this.timeout = timeout;
     }
 
+    @Override
+    public String toString() {
+        String info = "Dispatcher info [Timeout=" + this.getTimeout() + ", Class=" + this.getClass() + "]\n";
+        info += "Filters:\n";
+        if (this.getFilters() != null) {
+            for (DispatchFilter filter : this.getFilters()) {
+                info+="  -Filter:"+filter.getClass().getName()+". "+filter.toString();
+            }
+        }
+        return info;
+    }
+
 }

@@ -18,8 +18,8 @@ import org.command4spring.result.DispatchResult;
 import org.command4spring.result.Result;
 
 /**
- * InVm implementation of the {@link Dispatcher} Registers itself as the last
- * {@link DispatchFilter} in the chain as an executor filter.
+ * InVm implementation of the {@link Dispatcher} Registers itself as the last {@link DispatchFilter} in the chain as an
+ * executor filter.
  */
 public class InVmDispatcher extends AbstractDispatcher implements Dispatcher, Executor {
 
@@ -69,7 +69,26 @@ public class InVmDispatcher extends AbstractDispatcher implements Dispatcher, Ex
         if (this.actionsMap.containsKey(action.getCommandType())) {
             throw new DuplicateActionException("Duplicate action:" + action.getClass().getName() + " for command type:" + action.getCommandType());
         }
-        LOGGER.info("Action:" + action.getClass().getName() + " registered for command type:" + action.getCommandType());this.actionsMap.put(action.getCommandType(), action);
+        LOGGER.info("Action:" + action.getClass().getName() + " registered for command type:" + action.getCommandType());
+        this.actionsMap.put(action.getCommandType(), action);
+    }
+
+    @Override
+    public String toString() {
+        String info = "Dispatcher info [Timeout=" + this.getTimeout() + ", Class=" + this.getClass() + "]\n";
+        info += "Actions:\n";
+        if (this.actionsMap != null) {
+            for ( Action<? extends Command<? extends Result>, ? extends Result> action : this.actionsMap.values()) {
+                info += "  -Command: " + action.getCommandType().getName() + " mapped to action: " + action + "\n";
+            }
+        }
+        info += "Filters:\n";
+        if (this.getFilters() != null) {
+            for (DispatchFilter filter : this.getFilters()) {
+                info+="  -Filter:"+filter.getClass().getName()+". "+filter.toString();
+            }
+        }
+        return info;
     }
 
 }

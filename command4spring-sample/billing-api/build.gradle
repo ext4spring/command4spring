@@ -1,0 +1,5 @@
+dependencies {
+    compile("org.command4spring:command4spring-core:1.0-SNAPSHOT")
+    compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
+}
+

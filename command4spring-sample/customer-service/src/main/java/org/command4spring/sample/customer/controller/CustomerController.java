@@ -20,9 +20,10 @@ public class CustomerController {
     @Autowired
     private Dispatcher dispatcher;
 
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public String sayHello() throws DispatchException {
-        return "Hello";
+    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    public String dispatcherInfo() throws DispatchException {
+        //TODO: this info could be available by default with spring boot
+        return this.dispatcher.toString().replaceAll("\n", "<BR/>");
     }
 
 
