@@ -16,14 +16,16 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot' 
 
 dependencies {
-//    compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile project(":customer-api")
-
-    compile("org.springframework.boot:spring-boot-starter-web")
 
     compile("org.command4spring:command4spring-xml:1.0-SNAPSHOT")
     compile("org.command4spring:command4spring-spring:1.0-SNAPSHOT")
 
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    
+    compile("org.hsqldb:hsqldb")
+    
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }
 

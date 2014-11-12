@@ -7,6 +7,7 @@ import org.command4spring.dispatcher.filter.retry.RetryFilter;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.testbase.command.TestFailCommand;
 import org.command4spring.testbase.dispatcher.TestDispatcherFactory;
+import org.command4spring.testbase.exception.TestDispatchException;
 import org.junit.Test;
 
 public class InVmDispatcherTest extends AbstractDispatcherTest {
@@ -18,7 +19,7 @@ public class InVmDispatcherTest extends AbstractDispatcherTest {
         return this.dispatcher;
     }
 
-    @Test
+    @Test(expected=TestDispatchException.class)
     public void testRetry() throws DispatchException {
         InVmDispatcher inVmDispatcher=TestDispatcherFactory.createTestInVmDispatcher();
         inVmDispatcher.setTimeout(30000);

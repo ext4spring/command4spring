@@ -1,8 +1,3 @@
-task wrapper(type: Wrapper) {
-        gradleVersion = '2.0'
-        jarFile = '../wrapper/wrapper.jar'
-}
-
 subprojects {
 
     apply plugin: 'java'
@@ -33,10 +28,5 @@ subprojects {
     jar {
         manifest.attributes provider: 'Peter Borbas'
     }
-
-task wrapper(type: Wrapper) {
-        gradleVersion = '2.0'
-        jarFile = '../wrapper/wrapper.jar'
-}
 
 }

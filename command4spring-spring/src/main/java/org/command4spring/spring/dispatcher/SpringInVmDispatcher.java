@@ -13,7 +13,6 @@ import org.command4spring.result.Result;
 import org.command4spring.result.ResultFuture;
 import org.command4spring.spring.action.DispatchAction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Spring version of the {@link InVmDispatcher} which contains spring specific annotations for async execution, transactions and autodetect of {@link DispatchAction} classes
@@ -30,8 +29,6 @@ public class SpringInVmDispatcher extends InVmDispatcher implements Dispatcher {
     }
 
     @Override
-    @Transactional
-    //TODO: transactional won't work with a Dispatcher that uses ExecutorService and runs on separate thread
     public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(final C command) throws DispatchException {
         return super.dispatch(command);
     }

@@ -1,6 +1,6 @@
 package org.ext4spring.sample.customer;
 
-import org.ext4spring.sample.customer.Application;
+import org.command4spring.sample.customer.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
