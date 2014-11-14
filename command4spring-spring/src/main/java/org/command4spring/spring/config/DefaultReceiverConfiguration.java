@@ -13,7 +13,7 @@ import org.command4spring.spring.dispatcher.SpringInVmDispatcher;
 import org.command4spring.xml.serializer.XmlSerializer;
 import org.springframework.context.annotation.Bean;
 
-public class DefaultHttpReceiverConfiguration {
+public class DefaultReceiverConfiguration {
 
     @Bean
     public Serializer serializer() {

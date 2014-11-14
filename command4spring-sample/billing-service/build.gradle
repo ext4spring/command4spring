@@ -23,6 +23,7 @@ dependencies {
 
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.apache.activemq:activemq-broker")
     
     compile("org.hsqldb:hsqldb")
     

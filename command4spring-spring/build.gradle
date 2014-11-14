@@ -1,13 +1,17 @@
 dependencies {
     compile project(':command4spring-core')
     compile project(':command4spring-remote-http')
+    compile project(':command4spring-remote-jms')
     compile project(':command4spring-xml')
 
+    compile("org.springframework:spring-jms:"+springVersion)
     compile group: 'org.springframework', name: 'spring-web', version: springVersion
     compile group: 'org.springframework', name: 'spring-tx', version: springVersion
     compile group: 'org.springframework', name: 'spring-context', version: springVersion
     compile group: 'org.springframework', name: 'spring-core', version: springVersion
     
     provided 'org.springframework.boot:spring-boot:1.1.8.RELEASE'
+    provided 'org.apache.activemq:activemq-all:'+activemqVersion
+
     provided group: 'org.apache.tomcat', name: 'tomcat-servlet-api', version: tomcatServletApiVersion
 }

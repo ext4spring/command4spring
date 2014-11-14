@@ -35,6 +35,7 @@ public class JmsCommandReceiverListener implements MessageListener {
         super();
         this.commandReceiver = commandReceiver;
         this.resultJmsTemplate = resultJmsTemplate;
+        LOGGER.info("JMS command receiver initialized");
     }
 
     @Override

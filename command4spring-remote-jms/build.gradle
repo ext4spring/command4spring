@@ -2,7 +2,6 @@ dependencies {
     compile project(':command4spring-remote')
     compile 'javax.jms:jms-api:1.1-rev-1'
 
-    testCompile project(':command4spring-spring')
     testCompile project(':command4spring-xml')
     testCompile project(':command4spring-testbase')
     
