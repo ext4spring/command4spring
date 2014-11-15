@@ -29,6 +29,11 @@ public class EnableJmsCommandReceiver extends DefaultReceiverConfiguration {
     }
 
     @Bean
+    public JmsTemplate commandJmsTemplate() {
+	return new JmsTemplate(connectionFactory, commandDestination());
+    }
+
+    @Bean
     public JmsTemplate resultJmsTemplate() {
         return new JmsTemplate(connectionFactory, resultDestination());
     }
