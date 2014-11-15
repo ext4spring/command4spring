@@ -11,7 +11,7 @@ public class EnableHttpCommandReceiver extends DefaultReceiverConfiguration {
 
     @Bean
     public ServletRegistrationBean commandDispatcherServletRegistration() {
-        return new ServletRegistrationBean(new SpringCommandReceiverSerlvet(), "/dispatcher");
+	return new ServletRegistrationBean(new SpringCommandReceiverSerlvet(), "/dispatcher/*");
     }
 
 }

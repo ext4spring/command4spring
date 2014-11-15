@@ -27,11 +27,15 @@ public class XmlSerializer implements Serializer {
 
     @Override
     public Result toResult(String textResult) throws CommandSerializationException {
-        return (Result) this.xstream.fromXML(textResult);
+	try {
+	    return (Result) this.xstream.fromXML(textResult);
+	} catch (Exception e) {
+	    throw new CommandSerializationException("Cannot parse text to Result: " + textResult);
+	}
     }
 
     @Override
     public String toText(Result result) throws CommandSerializationException {
-        return this.xstream.toXML(result);
+	return this.xstream.toXML(result);
     }
 }
