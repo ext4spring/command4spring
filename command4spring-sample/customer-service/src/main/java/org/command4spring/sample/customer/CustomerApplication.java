@@ -1,6 +1,6 @@
-package org.command4spring.sample.billing;
+package org.command4spring.sample.customer;
 
-import org.command4spring.spring.boot.EnableJmsCommandReceiver;
+import org.command4spring.spring.boot.EnableHttpCommandReceiver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
@@ -13,10 +13,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan
 @EnableAutoConfiguration
 @EnableJpaRepositories
-@Import(EnableJmsCommandReceiver.class)
-public class Application extends SpringBootServletInitializer {
+@Import(EnableHttpCommandReceiver.class)
+public class CustomerApplication extends SpringBootServletInitializer {
+
 
     public static void main(final String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(CustomerApplication.class, args);
     }
 }

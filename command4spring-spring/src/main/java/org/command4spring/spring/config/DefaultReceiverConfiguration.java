@@ -12,7 +12,9 @@ import org.command4spring.serializer.Serializer;
 import org.command4spring.spring.dispatcher.SpringInVmDispatcher;
 import org.command4spring.xml.serializer.XmlSerializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class DefaultReceiverConfiguration {
 
     @Bean

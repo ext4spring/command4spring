@@ -62,4 +62,8 @@ public class DefaultCommandReceiver implements CommandReceiver {
         return this.dispatcher.getTimeout();
     }
 
+    @Override
+    public String toString() {
+	return this.dispatcher.toString();
+    }
 }

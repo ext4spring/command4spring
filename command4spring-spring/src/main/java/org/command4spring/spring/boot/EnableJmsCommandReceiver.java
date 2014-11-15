@@ -9,8 +9,10 @@ import org.command4spring.remote.jms.receiver.JmsCommandReceiverListener;
 import org.command4spring.spring.config.DefaultReceiverConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
+@Configuration
 public class EnableJmsCommandReceiver extends DefaultReceiverConfiguration {
 
     @Autowired

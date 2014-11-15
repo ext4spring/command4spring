@@ -42,7 +42,8 @@ public abstract class AbstractHttpCommandReceiverServlet extends HttpServlet {
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        this.process(req, resp);
+	IOUtils.write(this.commandReceiver.toString(), resp.getOutputStream());
+
     }
 
     protected void process(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
