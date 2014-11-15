@@ -33,7 +33,8 @@ Switch to Observable from ResultFuture
 	-The ObserverResult implementation is extendable to support later reactive or nio execution
 
 TODO:
-
+Service registry
+Load balancer dispatcher (uses an LB strategy to delegate to dispatcher instances)
 Cache support
 	-Implement as a DispatcherFilter
 	-Remote uses headers
