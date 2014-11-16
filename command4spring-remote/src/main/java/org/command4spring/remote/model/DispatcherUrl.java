@@ -8,6 +8,7 @@ public class DispatcherUrl {
     private String name;
     private String serializer;
     private String hostAndPort;
+    private long timeout;
     private Map<String, String> parameters = new HashMap<String, String>();
 
     public String getProtocol() {
@@ -50,9 +51,17 @@ public class DispatcherUrl {
 	this.parameters = parameters;
     }
 
+    public long getTimeout() {
+	return timeout;
+    }
+
+    public void setTimeout(long timeout) {
+	this.timeout = timeout;
+    }
+
     @Override
     public String toString() {
-	return "DispatcherUrl [protocol=" + protocol + ", name=" + name + ", serializer=" + serializer + ", hostAndPort=" + hostAndPort + ", parameters=" + parameters + "]";
+	return "DispatcherUrl [protocol=" + protocol + ", name=" + name + ", serializer=" + serializer + ", timeout=" + timeout + ", hostAndPort=" + hostAndPort + ", parameters=" + parameters + "]";
     }
     
 }
