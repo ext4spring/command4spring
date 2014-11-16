@@ -6,6 +6,14 @@ subprojects {
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
 
+//ECLIPSE
+eclipse {
+    classpath {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
     configurations {
         provided
         compile.extendsFrom provided
