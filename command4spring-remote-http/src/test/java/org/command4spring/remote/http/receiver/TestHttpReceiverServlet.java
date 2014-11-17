@@ -24,7 +24,7 @@ import javax.servlet.ServletException;
 import org.command4spring.dispatcher.InVmDispatcher;
 import org.command4spring.remote.receiver.CommandReceiver;
 import org.command4spring.remote.receiver.DefaultCommandReceiver;
-import org.command4spring.serializer.Serializer;
+import org.command4spring.remote.serializer.Serializer;
 import org.command4spring.testbase.dispatcher.TestDispatcherFactory;
 import org.command4spring.xml.serializer.XmlSerializer;
 

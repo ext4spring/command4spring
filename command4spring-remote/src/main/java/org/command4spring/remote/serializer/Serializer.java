@@ -1,4 +1,4 @@
-package org.command4spring.serializer;
+package org.command4spring.remote.serializer;
 
 import org.command4spring.command.Command;
 import org.command4spring.exception.CommandSerializationException;

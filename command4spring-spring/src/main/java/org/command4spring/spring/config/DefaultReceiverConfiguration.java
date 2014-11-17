@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 import org.command4spring.dispatcher.ChainableDispatcher;
 import org.command4spring.remote.receiver.CommandReceiver;
 import org.command4spring.remote.receiver.DefaultCommandReceiver;
-import org.command4spring.serializer.Serializer;
+import org.command4spring.remote.serializer.Serializer;
 import org.command4spring.spring.dispatcher.SpringInVmDispatcher;
 import org.command4spring.xml.serializer.XmlSerializer;
 import org.springframework.context.annotation.Bean;

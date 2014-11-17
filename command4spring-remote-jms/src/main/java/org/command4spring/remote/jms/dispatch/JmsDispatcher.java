@@ -14,8 +14,8 @@ import org.command4spring.exception.DispatchException;
 import org.command4spring.remote.dispatcher.AbstractRemoteDispatcher;
 import org.command4spring.remote.model.TextDispatcherCommand;
 import org.command4spring.remote.model.TextDispatcherResult;
+import org.command4spring.remote.serializer.Serializer;
 import org.command4spring.result.Result;
-import org.command4spring.serializer.Serializer;
 import org.command4spring.util.CommandUtil;
 
 public class JmsDispatcher extends AbstractRemoteDispatcher {

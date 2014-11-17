@@ -4,8 +4,8 @@ import org.command4spring.command.Command;
 import org.command4spring.example.SampleCommand;
 import org.command4spring.example.SampleResult;
 import org.command4spring.exception.CommandSerializationException;
+import org.command4spring.remote.serializer.Serializer;
 import org.command4spring.result.Result;
-import org.command4spring.serializer.Serializer;
 import org.junit.Assert;
 import org.junit.Test;
 

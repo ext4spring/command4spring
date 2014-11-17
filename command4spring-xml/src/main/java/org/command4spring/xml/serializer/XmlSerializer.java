@@ -2,8 +2,8 @@ package org.command4spring.xml.serializer;
 
 import org.command4spring.command.Command;
 import org.command4spring.exception.CommandSerializationException;
+import org.command4spring.remote.serializer.Serializer;
 import org.command4spring.result.Result;
-import org.command4spring.serializer.Serializer;
 
 import com.thoughtworks.xstream.XStream;
 

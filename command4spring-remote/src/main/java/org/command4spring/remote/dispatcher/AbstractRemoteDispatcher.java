@@ -12,10 +12,10 @@ import org.command4spring.exception.DispatchException;
 import org.command4spring.exception.ExceptionUtil;
 import org.command4spring.remote.model.TextDispatcherCommand;
 import org.command4spring.remote.model.TextDispatcherResult;
+import org.command4spring.remote.serializer.Serializer;
 import org.command4spring.result.DispatchResult;
 import org.command4spring.result.NoResult;
 import org.command4spring.result.Result;
-import org.command4spring.serializer.Serializer;
 import org.command4spring.util.CommandUtil;
 
 /**

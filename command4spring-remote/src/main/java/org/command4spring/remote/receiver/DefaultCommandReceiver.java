@@ -8,9 +8,9 @@ import org.command4spring.exception.CommandSerializationException;
 import org.command4spring.remote.dispatcher.RemoteDispatcher;
 import org.command4spring.remote.model.TextDispatcherCommand;
 import org.command4spring.remote.model.TextDispatcherResult;
+import org.command4spring.remote.serializer.Serializer;
 import org.command4spring.result.DispatchResult;
 import org.command4spring.result.Result;
-import org.command4spring.serializer.Serializer;
 
 public class DefaultCommandReceiver implements CommandReceiver {
 

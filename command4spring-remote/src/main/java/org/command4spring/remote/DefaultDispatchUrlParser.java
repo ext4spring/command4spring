@@ -32,6 +32,7 @@ public class DefaultDispatchUrlParser implements DispatcherUrlParser {
 	dispatcherUrl.setName(nameAndSerializer[0]);
 	dispatcherUrl.setSerializer(nameAndSerializer[1]);
 	dispatcherUrl.setHostAndPort(urlString.substring(atIdx + 1, pathSeparatorIdx));
+	dispatcherUrl.setPath(urlString.substring(pathSeparatorIdx + 1, querySeparatorIdx));
 	String query = urlString.substring(querySeparatorIdx + 1);
 	for (String queryTuple : query.split("&")) {
 	    String[] querySplit = queryTuple.split("=");

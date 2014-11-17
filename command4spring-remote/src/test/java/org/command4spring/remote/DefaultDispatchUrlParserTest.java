@@ -9,13 +9,14 @@ public class DefaultDispatchUrlParserTest {
 
     @Test
     public void testValidHttpUrl() throws DispatchUrlParsingException {
-	String url = "http://name:xml@hostname:8080/?timeout=5";
+	String url = "http://name:xml@hostname:8080/path?timeout=5";
 	DefaultDispatchUrlParser parser = new DefaultDispatchUrlParser();
 	DispatcherUrl dispatcherUrl = parser.parse(url);
 	Assert.assertEquals("http", dispatcherUrl.getProtocol());
 	Assert.assertEquals("hostname:8080", dispatcherUrl.getHostAndPort());
 	Assert.assertEquals("name", dispatcherUrl.getName());
 	Assert.assertEquals("xml", dispatcherUrl.getSerializer());
+	Assert.assertEquals("path", dispatcherUrl.getPath());
 	Assert.assertEquals(1, dispatcherUrl.getParameters().size());
 	Assert.assertEquals(5, dispatcherUrl.getTimeout());
     }

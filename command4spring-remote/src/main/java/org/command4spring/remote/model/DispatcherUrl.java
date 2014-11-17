@@ -8,8 +8,17 @@ public class DispatcherUrl {
     private String name;
     private String serializer;
     private String hostAndPort;
+    private String path;
     private long timeout;
     private Map<String, String> parameters = new HashMap<String, String>();
+
+    public String getPath() {
+	return path;
+    }
+
+    public void setPath(String path) {
+	this.path = path;
+    }
 
     public String getProtocol() {
 	return protocol;
@@ -63,5 +72,5 @@ public class DispatcherUrl {
     public String toString() {
 	return "DispatcherUrl [protocol=" + protocol + ", name=" + name + ", serializer=" + serializer + ", timeout=" + timeout + ", hostAndPort=" + hostAndPort + ", parameters=" + parameters + "]";
     }
-    
+
 }

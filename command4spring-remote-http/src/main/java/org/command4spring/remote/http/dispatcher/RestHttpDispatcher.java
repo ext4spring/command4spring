@@ -27,8 +27,8 @@ import org.command4spring.remote.dispatcher.RemoteDispatcher;
 import org.command4spring.remote.exception.RemoteDispatchException;
 import org.command4spring.remote.model.TextDispatcherCommand;
 import org.command4spring.remote.model.TextDispatcherResult;
+import org.command4spring.remote.serializer.Serializer;
 import org.command4spring.result.Result;
-import org.command4spring.serializer.Serializer;
 
 /**
  * Remote HTTP implementation of the {@link Dispatcher}
