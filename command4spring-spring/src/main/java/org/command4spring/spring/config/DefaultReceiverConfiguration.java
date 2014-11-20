@@ -30,12 +30,12 @@ public class DefaultReceiverConfiguration {
     @Bean
     public ChainableDispatcher dispatcher() {
         SpringInVmDispatcher dispatcher = new SpringInVmDispatcher();
-        dispatcher.setExecutorService(this.executor());
+        dispatcher.setExecutorService(executor());
         return dispatcher;
     }
 
     @Bean
     public CommandReceiver commandReceiver() {
-        return new DefaultCommandReceiver(this.serializer(), this.dispatcher());
+        return new DefaultCommandReceiver(serializer(), dispatcher());
     }
 }

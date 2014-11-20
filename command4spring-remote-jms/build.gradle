@@ -2,6 +2,9 @@ dependencies {
     compile project(':command4spring-remote')
     compile 'javax.jms:jms-api:1.1-rev-1'
 
+    provided 'org.apache.activemq:activemq-all:'+activemqVersion
+    
+    
     testCompile project(':command4spring-xml')
     testCompile project(':command4spring-testbase')
     

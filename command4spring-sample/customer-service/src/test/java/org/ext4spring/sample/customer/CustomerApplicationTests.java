@@ -29,7 +29,8 @@ public class CustomerApplicationTests {
 
     @Before
     public void initDispatcher() {
-	this.dispatcher = new RestHttpDispatcher("http://localhost:8881/dispatcher", serializer);
+
+        dispatcher = new RestHttpDispatcher("http://localhost:8881/dispatcher", serializer);
     }
 
     @Test
@@ -38,8 +39,8 @@ public class CustomerApplicationTests {
 
     @Test
     public void testCreateCustomer() throws DispatchException {
-	dispatcher.dispatch(new CreateCustomerCommand(new Customer(1, "test1"))).getResult();
-	Assert.assertEquals(1, dispatcher.dispatch(new ListCustomersCommand()).getResult().getCustomers().size());
+        dispatcher.dispatch(new CreateCustomerCommand(new Customer(1, "test1"))).getResult();
+        Assert.assertEquals(1, dispatcher.dispatch(new ListCustomersCommand()).getResult().getCustomers().size());
     }
 
 }

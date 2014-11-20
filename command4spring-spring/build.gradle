@@ -12,6 +12,8 @@ dependencies {
     
     provided 'org.springframework.boot:spring-boot:1.1.8.RELEASE'
     provided 'org.apache.activemq:activemq-all:'+activemqVersion
-
     provided group: 'org.apache.tomcat', name: 'tomcat-servlet-api', version: tomcatServletApiVersion
+    
+    testCompile  group: 'org.springframework', name: 'spring-test', version: springVersion
+
 }

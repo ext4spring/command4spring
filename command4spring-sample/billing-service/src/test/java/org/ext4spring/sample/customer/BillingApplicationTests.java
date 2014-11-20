@@ -1,5 +1,6 @@
 package org.ext4spring.sample.customer;
 
+import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.exception.DispatchException;
 import org.command4spring.remote.jms.dispatch.JmsDispatcher;
 import org.command4spring.remote.jms.dispatch.JmsTemplate;
@@ -30,11 +31,11 @@ public class BillingApplicationTests {
     @Qualifier("resultJmsTemplate")
     JmsTemplate resultJmsTemplate;
 
-    JmsDispatcher dispatcher;
+    Dispatcher dispatcher;
 
     @Before
     public void initDispatcher() {
-	dispatcher = new JmsDispatcher(commandJmsTemplate, resultJmsTemplate, serializer);
+        dispatcher = new JmsDispatcher(commandJmsTemplate, resultJmsTemplate, serializer);
     }
 
     @Test
@@ -43,7 +44,7 @@ public class BillingApplicationTests {
 
     @Test
     public void createInvoice() throws DispatchException {
-	CreateInvoiceCommand command = new CreateInvoiceCommand(new Invoice(1l, "inv1", 5000));
-	this.dispatcher.dispatch(command).getResult();
+        CreateInvoiceCommand command = new CreateInvoiceCommand(new Invoice(1l, "inv1", 5000));
+        dispatcher.dispatch(command).getResult();
     }
 }

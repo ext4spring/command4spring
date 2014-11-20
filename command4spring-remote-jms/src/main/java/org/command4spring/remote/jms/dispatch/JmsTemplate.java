@@ -1,5 +1,7 @@
 package org.command4spring.remote.jms.dispatch;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -12,6 +14,9 @@ import javax.jms.Session;
 public class JmsTemplate {
     private final ConnectionFactory connectionFactory;
     private final Destination destination;
+    private final ReentrantLock lock = new ReentrantLock();
+    private Connection connection;
+    private Session session;
 
     public JmsTemplate(final ConnectionFactory connectionFactory, final Destination destination) {
         super();
@@ -19,33 +24,48 @@ public class JmsTemplate {
         this.destination = destination;
     }
 
-    public void send(final MessageCreator messageCreator) throws JMSException  {
-        Connection connection = this.createConnection();
-        try {
-            Session session = this.createSession(connection);
-            MessageProducer producer = this.createProducer(session, this.destination);
-            producer.send(messageCreator.createMessage(session));
-        } finally {
-            this.closeConnection(connection);
-        }
+    public void send(final MessageCreator messageCreator) throws JMSException {
+        createProducer().send(messageCreator.createMessage(session));
     }
 
     @SuppressWarnings("unchecked")
     public <T extends Message> T receive(final String messageSelector, final Class<T> messageType, final long timeout) throws JMSException {
-        Connection connection = this.createConnection();
+        Connection connection = createConnection();
         try {
-            Session session = this.createSession(connection);
-            MessageConsumer consumer = session.createConsumer(this.destination, messageSelector);
+            Session session = createSession(connection);
+            MessageConsumer consumer = session.createConsumer(destination, messageSelector);
             T resultMessage = (T) consumer.receive(timeout);
             return resultMessage;
         } finally {
-            this.closeConnection(connection);
+            closeConnection(connection);
         }
 
     }
 
-    protected MessageProducer createProducer(final Session session, final Destination destination) throws JMSException {
-        return session.createProducer(destination);
+    protected MessageProducer createProducer() throws JMSException {
+        lock.lock();
+        try {
+            if (session != null) {
+                try {
+                    return session.createProducer(destination);
+                } catch (Exception e) {
+                    try {
+                        connection.close();
+                    } catch (Exception e1) {
+                        //nop
+                    }
+                    connection = null;
+                    session = null;
+                }
+            }
+            if (connection == null) {
+                connection = connectionFactory.createConnection();
+                session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            }
+            return session.createProducer(destination);
+        } finally {
+            lock.unlock();
+        }
     }
 
     protected Session createSession(final Connection connection) throws JMSException {
@@ -53,11 +73,11 @@ public class JmsTemplate {
     }
 
     protected Connection createConnection() throws JMSException {
-        return this.connectionFactory.createConnection();
+        return connectionFactory.createConnection();
     }
 
     protected void closeConnection(final Connection connection) throws JMSException {
-        connection.close(); 
+        connection.close();
     }
 
 }

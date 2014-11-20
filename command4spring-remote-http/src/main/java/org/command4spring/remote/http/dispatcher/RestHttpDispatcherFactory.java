@@ -10,25 +10,31 @@ public class RestHttpDispatcherFactory implements DispatcherFactory {
 
     private final SerializerFactory serializerFactory;
 
-    public RestHttpDispatcherFactory(SerializerFactory serializerFactory) {
-	super();
-	this.serializerFactory = serializerFactory;
+    public RestHttpDispatcherFactory(final SerializerFactory serializerFactory) {
+        super();
+        this.serializerFactory = serializerFactory;
     }
 
     @Override
-    public Dispatcher create(DispatcherUrl url) throws DispatchException {
-	if (isFactoryFor(url)) {
-	    return new RestHttpDispatcher(this.createTargetUrl(url), this.serializerFactory.create(url.getSerializer()));
-	}
-	throw new DispatchException("Cannot create HTTP dispatcher for url:" + url);
+    public Dispatcher create(final DispatcherUrl url) throws DispatchException {
+        if (isFactoryFor(url)) {
+            RestHttpDispatcher dispatcher = new RestHttpDispatcher(createTargetUrl(url), serializerFactory.create(url.getSerializer()));
+            dispatcher.setTimeout(url.getTimeout());
+            return dispatcher;
+        }
+        throw new DispatchException("Cannot create HTTP dispatcher for url:" + url);
     }
 
-    protected String createTargetUrl(DispatcherUrl url) {
-	return url.getProtocol() + "://" + url.getHostAndPort() + "/" + url.getPath();
+    protected String createTargetUrl(final DispatcherUrl url) {
+        String targetUrl = url.getProtocol() + "://" + url.getHostAndPort();
+        if (url.getPath() != null && url.getPath().length() > 0) {
+            targetUrl += "/" + url.getPath();
+        }
+        return targetUrl;
     }
 
     @Override
-    public boolean isFactoryFor(DispatcherUrl url) {
-	return url.getProtocol().equals("http") || url.getProtocol().equals("https");
+    public boolean isFactoryFor(final DispatcherUrl url) {
+        return url.getProtocol().equals("http") || url.getProtocol().equals("https");
     }
 }
