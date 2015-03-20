@@ -10,7 +10,6 @@ public interface Result {
 	
 	/**
 	 * ID of the Command that this Result belogs to. 
-	 * @return
 	 */
 	String getCommandId();
 	

@@ -23,6 +23,7 @@ import org.command4spring.exception.ExceptionUtil;
  * 
  * @author pborbas
  * @param <R>
+ *            Type of result
  */
 public class ResultFuture<R extends Result> implements Future<R>, DispatcherCallback {
 
@@ -33,46 +34,46 @@ public class ResultFuture<R extends Result> implements Future<R>, DispatcherCall
     private DispatchException exception;
     private ResultCallback<R> callback;
 
-    public ResultFuture(long timeout) {
+    public ResultFuture(final long timeout) {
 	super();
 	this.timeout = timeout;
 	this.startTime = System.currentTimeMillis();
     }
 
-    public ResultFuture(final Future<DispatchResult<R>> wrappedFuture, long timeout) {
+    public ResultFuture(final Future<DispatchResult<R>> wrappedFuture, final long timeout) {
 	this.wrappedFuture = wrappedFuture;
 	this.timeout = timeout;
 	this.startTime = System.currentTimeMillis();
     }
 
-    public void setWrappedFuture(Future<DispatchResult<R>> wrappedFuture) {
+    public void setWrappedFuture(final Future<DispatchResult<R>> wrappedFuture) {
 	this.wrappedFuture = wrappedFuture;
     }
 
-    public void registerCallback(ResultCallback<R> callback) {
+    public void registerCallback(final ResultCallback<R> callback) {
 	this.callback = callback;
 	this.notifyCallback();
     }
 
     @Override
-    public void onError(Command<? extends Result> command, DispatchException e) throws DispatchException {
+    public void onError(final Command<? extends Result> command, final DispatchException e) throws DispatchException {
 	this.exception = e;
 	this.notifyCallback();
     }
 
     @Override
-    public void onSuccess(Command<? extends Result> command, Result result) throws DispatchException {
+    public void onSuccess(final Command<? extends Result> command, final Result result) throws DispatchException {
 	this.result = (R) result;
 	this.notifyCallback();
     }
 
     private void notifyCallback() {
-	if (callback != null) {
+	if (this.callback != null) {
 	    if (this.result != null) {
 		this.callback.onSuccess(this.result);
 	    }
 	    if (this.exception != null) {
-		this.callback.onError(exception);
+		this.callback.onError(this.exception);
 	    }
 	}
     }
@@ -100,7 +101,7 @@ public class ResultFuture<R extends Result> implements Future<R>, DispatcherCall
      */
     public R get() throws InterruptedException, ExecutionException {
 	try {
-	    return this.wrappedFuture.get(timeout, TimeUnit.MILLISECONDS).getResult();
+	    return this.wrappedFuture.get(this.timeout, TimeUnit.MILLISECONDS).getResult();
 	} catch (TimeoutException e) {
 	    throw new ExecutionException(e);
 	}
@@ -117,7 +118,7 @@ public class ResultFuture<R extends Result> implements Future<R>, DispatcherCall
     }
 
     public R getResult() throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
-	return this.getResult(timeout, TimeUnit.MILLISECONDS);
+	return this.getResult(this.timeout, TimeUnit.MILLISECONDS);
     }
 
     @SuppressWarnings("unchecked")
@@ -126,7 +127,7 @@ public class ResultFuture<R extends Result> implements Future<R>, DispatcherCall
     }
 
     public DispatchResult<R> getDispatchResult() throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
-	return this.getDispatchResult(timeout, TimeUnit.MILLISECONDS);
+	return this.getDispatchResult(this.timeout, TimeUnit.MILLISECONDS);
     }
 
     public DispatchResult<R> getDispatchResult(final long timeout, final TimeUnit unit) throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
@@ -143,12 +144,12 @@ public class ResultFuture<R extends Result> implements Future<R>, DispatcherCall
 	} catch (TimeoutException e) {
 	    throw new AsyncTimeoutException("Execution timed out:" + e, e);
 	} finally {
-	    killOnTimeout();
+	    this.killOnTimeout();
 	}
     }
 
     private void killOnTimeout() {
-	if ((!this.wrappedFuture.isCancelled() && !this.wrappedFuture.isDone()) && (System.currentTimeMillis() > startTime + timeout)) {
+	if ((!this.wrappedFuture.isCancelled() && !this.wrappedFuture.isDone()) && (System.currentTimeMillis() > this.startTime + this.timeout)) {
 	    this.wrappedFuture.cancel(true);
 	}
     }

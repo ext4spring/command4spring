@@ -13,8 +13,6 @@ public interface Executor {
     /**
      * Executes the command or delegates it to another dispatcher
      * 
-     * @param dispatchCommand
-     * @return
      * @throws DispatchException
      */
     public DispatchResult execute(DispatchCommand dispatchCommand) throws DispatchException;

@@ -28,7 +28,6 @@ public interface Command<R extends Result> extends Serializable {
 
     /**
      * Unique command Id
-     * @return
      */
     String getCommandId();
 

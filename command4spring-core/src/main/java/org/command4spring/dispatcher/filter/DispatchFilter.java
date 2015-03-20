@@ -19,8 +19,6 @@ public interface DispatchFilter {
      * (cache). The last should execute the command of forward to another
      * dispatcher (remoting)
      * 
-     * @param command
-     * @return
      * @throws DispatchException
      */
     public DispatchResult<? extends Result> filter(DispatchCommand dispatchCommand, DispatchFilterChain filterChain) throws DispatchException;

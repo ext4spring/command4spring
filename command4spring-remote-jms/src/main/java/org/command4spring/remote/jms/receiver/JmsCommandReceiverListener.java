@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.exception.CommandSerializationException;
 import org.command4spring.exception.DispatchException;
+import org.command4spring.remote.jms.dispatch.JmsDispatcher;
 import org.command4spring.remote.jms.dispatch.JmsTemplate;
 import org.command4spring.remote.jms.dispatch.MessageCreator;
 import org.command4spring.remote.model.TextDispatcherCommand;
@@ -21,7 +22,7 @@ import org.command4spring.remote.receiver.CommandReceiver;
 
 /**
  * Configure this as a message listener for the queue where you send commands
- * with {@link JmsDispatcherService}
+ * with {@link JmsDispatcher}
  * 
  * @author borbasp
  */

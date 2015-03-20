@@ -18,4 +18,5 @@ public class JmsDispatcherTest extends AbstractDispatcherTest {
     protected ChainableDispatcher getDispatcher() {
         return this.dispatcher;
     }
+
 }

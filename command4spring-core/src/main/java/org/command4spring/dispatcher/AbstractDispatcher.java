@@ -44,7 +44,6 @@ public abstract class AbstractDispatcher implements Dispatcher, ChainableDispatc
     /**
      * The returned executor will be added to the end of the filter chain.
      * 
-     * @return
      */
     protected abstract Executor getExecutor();
 

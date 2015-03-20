@@ -65,8 +65,6 @@ public abstract class AbstractRemoteDispatcher extends AbstractDispatcher implem
      * Creates a basic command message which contains all the library specific
      * headers
      * 
-     * @param command
-     * @return
      * @throws CommandSerializationException
      */
     protected TextDispatcherCommand serializeCommand(final DispatchCommand dispatchCommand) throws CommandSerializationException {

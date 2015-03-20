@@ -15,9 +15,6 @@ public class ExceptionUtil {
      * constructor it will return a propert typed class with the message.
      * Otherwise a general {@link DispatchException} is created with the message
      * 
-     * @param exceptionClass
-     * @param message
-     * @return
      */
     public static DispatchException instantiateDispatchException(final String exceptionClass, final String message) {
 	try {

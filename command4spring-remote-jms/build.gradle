@@ -9,6 +9,6 @@ dependencies {
     testCompile group: 'org.springframework', name: 'spring-core', version: springVersion
     testCompile group: 'org.springframework', name: 'spring-jms', version: springVersion
     testCompile group: 'org.springframework', name: 'spring-test', version: springVersion
-    testCompile 'org.apache.activemq:activemq-spring:'+activemqVersion
-    testCompile 'org.apache.activemq:activemq-all:'+activemqVersion
+    compile 'org.apache.activemq:activemq-spring:'+activemqVersion
+    compile 'org.apache.activemq:activemq-all:'+activemqVersion
 }

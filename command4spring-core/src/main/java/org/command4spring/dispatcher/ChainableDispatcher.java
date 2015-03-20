@@ -17,9 +17,6 @@ public interface ChainableDispatcher extends Dispatcher {
 
     /**
      * Executes the command with the dispatcher but instead of using a Command it uses a previously prepared {@link DispatchCommand} which contains headers
-     * @param dispatchCommand
-     * @param requestTimeout
-     * @return
      * @throws DispatchException
      */
     public <C extends Command<R>, R extends Result> ResultFuture<R> dispatch(DispatchCommand dispatchCommand) throws DispatchException;

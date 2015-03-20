@@ -3,9 +3,11 @@ package org.command4spring.result;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.command4spring.dispatcher.filter.DispatchFilter;
+
 /**
  * Wrapps a {@link Result} and adds header feature to it. The
- * {@link CommandFilter}s can use these headers to communicate with each-other
+ * {@link DispatchFilter}s can use these headers to communicate with each-other
  * (cache info, etc.)
  * 
  * @author pborbas
