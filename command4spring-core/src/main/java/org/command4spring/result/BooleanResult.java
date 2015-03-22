@@ -2,9 +2,7 @@ package org.command4spring.result;
 
 public class BooleanResult extends AbstractSimpleResult<Boolean> {
 
-    private static final long serialVersionUID = 1L;
-
-    public BooleanResult(String commandId, Boolean value) {
+    public BooleanResult(final String commandId, final Boolean value) {
         super(commandId, value);
     }
 

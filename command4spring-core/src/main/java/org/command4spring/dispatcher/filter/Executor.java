@@ -15,6 +15,7 @@ public interface Executor {
      * 
      * @throws DispatchException
      */
+    @SuppressWarnings("rawtypes")
     public DispatchResult execute(DispatchCommand dispatchCommand) throws DispatchException;
 
 }

@@ -3,6 +3,12 @@ package org.command4spring.remote.model;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Model of a parsed dispatcher URL
+ * 
+ * @author pborbas
+ *
+ */
 public class DispatcherUrl {
     private String protocol;
     private String name;
@@ -13,64 +19,64 @@ public class DispatcherUrl {
     private Map<String, String> parameters = new HashMap<String, String>();
 
     public String getPath() {
-	return path;
+	return this.path;
     }
 
-    public void setPath(String path) {
+    public void setPath(final String path) {
 	this.path = path;
     }
 
     public String getProtocol() {
-	return protocol;
+	return this.protocol;
     }
 
-    public void setProtocol(String protocol) {
+    public void setProtocol(final String protocol) {
 	this.protocol = protocol;
     }
 
     public String getName() {
-	return name;
+	return this.name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
 	this.name = name;
     }
 
     public String getSerializer() {
-	return serializer;
+	return this.serializer;
     }
 
-    public void setSerializer(String serializer) {
+    public void setSerializer(final String serializer) {
 	this.serializer = serializer;
     }
 
     public String getHostAndPort() {
-	return hostAndPort;
+	return this.hostAndPort;
     }
 
-    public void setHostAndPort(String hostAndPort) {
+    public void setHostAndPort(final String hostAndPort) {
 	this.hostAndPort = hostAndPort;
     }
 
     public Map<String, String> getParameters() {
-	return parameters;
+	return this.parameters;
     }
 
-    public void setParameters(Map<String, String> parameters) {
+    public void setParameters(final Map<String, String> parameters) {
 	this.parameters = parameters;
     }
 
     public long getTimeout() {
-	return timeout;
+	return this.timeout;
     }
 
-    public void setTimeout(long timeout) {
+    public void setTimeout(final long timeout) {
 	this.timeout = timeout;
     }
 
     @Override
     public String toString() {
-	return "DispatcherUrl [protocol=" + protocol + ", name=" + name + ", serializer=" + serializer + ", timeout=" + timeout + ", hostAndPort=" + hostAndPort + ", parameters=" + parameters + "]";
+	return "DispatcherUrl [protocol=" + this.protocol + ", name=" + this.name + ", serializer=" + this.serializer + ", timeout=" + this.timeout + ", hostAndPort=" + this.hostAndPort + ", parameters=" + this.parameters + "]";
     }
 
 }

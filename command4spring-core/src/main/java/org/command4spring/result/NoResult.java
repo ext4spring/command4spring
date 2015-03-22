@@ -8,8 +8,6 @@ package org.command4spring.result;
  */
 public class NoResult extends AbstractResult implements Result {
 
-    private static final long serialVersionUID = -4832943487870620012L;
-
     public NoResult(final String commandId) {
         super(commandId);
     }

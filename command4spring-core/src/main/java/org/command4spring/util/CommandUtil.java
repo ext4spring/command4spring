@@ -8,6 +8,7 @@ import org.command4spring.result.Result;
 
 public class CommandUtil {
 
+    @SuppressWarnings("unchecked")
     public static Class<? extends Result> getResultType(final Command<? extends Result> command) {
         return (Class<? extends Result>) ((ParameterizedType) command.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }

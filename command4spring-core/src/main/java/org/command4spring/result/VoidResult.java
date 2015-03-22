@@ -8,8 +8,6 @@ package org.command4spring.result;
  */
 public class VoidResult extends AbstractResult implements Result {
 
-    private static final long serialVersionUID = -4832943487870620012L;
-
     public VoidResult(final String commandId) {
         super(commandId);
     }

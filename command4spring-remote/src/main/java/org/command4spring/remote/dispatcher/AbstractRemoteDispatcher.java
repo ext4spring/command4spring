@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.command4spring.command.Command;
 import org.command4spring.command.DispatchCommand;
 import org.command4spring.dispatcher.AbstractDispatcher;
-import org.command4spring.dispatcher.Dispatcher;
 import org.command4spring.dispatcher.filter.Executor;
 import org.command4spring.exception.CommandSerializationException;
 import org.command4spring.exception.DispatchException;
@@ -19,7 +18,7 @@ import org.command4spring.result.Result;
 import org.command4spring.util.CommandUtil;
 
 /**
- * Remote HTTP implementation of the {@link Dispatcher}
+ * Common logic of the {@link RemoteDispatcher}
  */
 public abstract class AbstractRemoteDispatcher extends AbstractDispatcher implements RemoteDispatcher, Executor {
 

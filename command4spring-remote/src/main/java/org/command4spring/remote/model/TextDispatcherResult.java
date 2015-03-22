@@ -3,6 +3,14 @@ package org.command4spring.remote.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.command4spring.result.DispatchResult;
+
+/**
+ * Serialized version of the {@link DispatchResult}
+ * 
+ * @author pborbas
+ *
+ */
 public class TextDispatcherResult {
     
     private final String commandId;
@@ -15,7 +23,7 @@ public class TextDispatcherResult {
     }
 
     public String getCommandId() {
-	return commandId;
+	return this.commandId;
     }
 
     public String getTextResult() {
@@ -31,6 +39,6 @@ public class TextDispatcherResult {
     }
 
     public Map<String, String> getHeaders() {
-	return headers;
+	return this.headers;
     }
 }

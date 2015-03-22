@@ -64,6 +64,7 @@ public abstract class AbstractDispatcherTest {
         futureResult.getResult();
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testResultFutureCallsCallbackOnSuccess() throws DispatchException {
 	SampleCommand command = new SampleCommand();
@@ -74,16 +75,16 @@ public abstract class AbstractDispatcherTest {
 	Mockito.verify(resultCallback).onSuccess(sampleResult);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testResultFutureCallsCallbackOnFailure() throws DispatchException {
 	TestFailCommand command = new TestFailCommand();
 	ResultFuture<VoidResult> futureResult = this.getDispatcher().dispatch(command);
 	ResultCallback<VoidResult> resultCallback = Mockito.mock(ResultCallback.class);
 	futureResult.registerCallback(resultCallback);
-	VoidResult result;
 	DispatchException dispatchException = null;
 	try {
-	    result = futureResult.getResult();
+	    futureResult.getResult();
 	} catch (DispatchException e) {
 	    dispatchException = e;
 	}

@@ -2,14 +2,13 @@ package org.command4spring.result;
 
 public class AbstractResult implements Result {
 
-    private static final long serialVersionUID = 1L;
     private String commandId;
 
     protected AbstractResult() {
         // for serialization
     }
     
-    public AbstractResult(String commandId) {
+    public AbstractResult(final String commandId) {
         if (commandId == null) {
             throw new IllegalArgumentException("Null command ID not allowed");
         }
@@ -22,13 +21,13 @@ public class AbstractResult implements Result {
     }
 
     @Override
-    public void setCommandId(String commandId) {
+    public void setCommandId(final String commandId) {
         this.commandId = commandId;
     }
 
     @Override
     public String toString() {
-        return "type:" + this.getClass() + " commandId:" + commandId;
+        return "type:" + this.getClass() + " commandId:" + this.commandId;
     }
 
 }

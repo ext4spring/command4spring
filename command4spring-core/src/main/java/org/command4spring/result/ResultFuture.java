@@ -61,6 +61,7 @@ public class ResultFuture<R extends Result> implements Future<R>, DispatcherCall
 	this.notifyCallback();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onSuccess(final Command<? extends Result> command, final Result result) throws DispatchException {
 	this.result = (R) result;
@@ -93,7 +94,6 @@ public class ResultFuture<R extends Result> implements Future<R>, DispatcherCall
 	return this.wrappedFuture.isDone();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     @Deprecated
     /**
@@ -107,7 +107,6 @@ public class ResultFuture<R extends Result> implements Future<R>, DispatcherCall
 	}
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     @Deprecated
     /**
@@ -121,7 +120,6 @@ public class ResultFuture<R extends Result> implements Future<R>, DispatcherCall
 	return this.getResult(this.timeout, TimeUnit.MILLISECONDS);
     }
 
-    @SuppressWarnings("unchecked")
     public R getResult(final long timeout, final TimeUnit unit) throws AsyncTimeoutException, AsyncErrorException, AsyncInterruptedException, DispatchException {
 	return this.getDispatchResult(timeout, unit).getResult();
     }

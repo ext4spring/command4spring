@@ -18,8 +18,7 @@ public class TestWaitAction implements Action<TestWaitCommand, VoidResult>{
         try {
             Thread.sleep(command.getWaitTime());
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+	    // nop
         }
         return new VoidResult(command.getCommandId());
     }

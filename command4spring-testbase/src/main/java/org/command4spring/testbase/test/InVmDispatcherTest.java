@@ -23,9 +23,10 @@ public class InVmDispatcherTest extends AbstractDispatcherTest {
     }
 
     public static class CallCountCommand extends AbstractCommand<VoidResult> {
+	private static final long serialVersionUID = 1L;
 	final boolean fail;
 
-	public CallCountCommand(boolean fail) {
+	public CallCountCommand(final boolean fail) {
 	    super();
 	    this.fail = fail;
 	}
@@ -36,13 +37,13 @@ public class InVmDispatcherTest extends AbstractDispatcherTest {
 	int count = 0;
 
 	@Override
-	public Action<CallCountCommand, VoidResult> validate(CallCountCommand command) throws CommandValidationException {
+	public Action<CallCountCommand, VoidResult> validate(final CallCountCommand command) throws CommandValidationException {
 	    return this;
 	}
 
 	@Override
-	public VoidResult execute(CallCountCommand command) throws DispatchException {
-	    count++;
+	public VoidResult execute(final CallCountCommand command) throws DispatchException {
+	    this.count++;
 	    if (command.fail) {
 		throw new DispatchException("Failed cause you asked for it");
 	    }
@@ -55,7 +56,7 @@ public class InVmDispatcherTest extends AbstractDispatcherTest {
 	}
 
 	public int getCount() {
-	    return count;
+	    return this.count;
 	}
     }
 

@@ -3,6 +3,14 @@ package org.command4spring.remote.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.command4spring.command.DispatchCommand;
+
+/**
+ * Serialized version of a {@link DispatchCommand}
+ * 
+ * @author pborbas
+ *
+ */
 public class TextDispatcherCommand {
 
     private final String textCommand;

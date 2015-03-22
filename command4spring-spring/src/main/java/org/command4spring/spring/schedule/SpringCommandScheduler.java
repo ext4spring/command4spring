@@ -27,7 +27,7 @@ public class SpringCommandScheduler implements CommandScheduler {
     private static final Log LOG = LogFactory.getLog(SpringCommandScheduler.class);
 
     private Dispatcher dispatcher;
-    private List<ScheduledCommand> scheduledCommands;
+    private List<ScheduledCommand<?, Result>> scheduledCommands;
     private TaskScheduler taskScheduler;
     private boolean autostart;
 
@@ -55,7 +55,7 @@ public class SpringCommandScheduler implements CommandScheduler {
     @Override
     @SuppressWarnings("rawtypes")
     public void schedule() {
-        for (ScheduledCommand scheduledCommand : this.scheduledCommands) {
+	for (ScheduledCommand<?, Result> scheduledCommand : this.scheduledCommands) {
             ScheduledTask task = new ScheduledTask(this.dispatcher, scheduledCommand);
             this.taskScheduler.schedule(task, scheduledCommand.createTrigger());
             ScheduledFuture future = this.taskScheduler.schedule(task, scheduledCommand.createTrigger());
@@ -85,7 +85,8 @@ public class SpringCommandScheduler implements CommandScheduler {
     }
 
     @Autowired
-    public void setScheduledCommands(final List<ScheduledCommand> scheduledCommands) {
+    public void setScheduledCommands(
+	    final List<ScheduledCommand<?, Result>> scheduledCommands) {
         this.scheduledCommands = scheduledCommands;
     }
 
